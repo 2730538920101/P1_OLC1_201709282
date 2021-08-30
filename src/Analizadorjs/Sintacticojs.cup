@@ -1,0 +1,234 @@
+package Analizadorjs;
+import java_cup.runtime.*;
+import ASTjs.Erroresjs.*;
+
+parser code  
+{:
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+        Analizadorjs.errores.add(new MiErrorjs(s.left, s.right, TipoErrorjs.SINTACTICO, 
+                "Se detectó un error sintáctico ("+s.value+")"));
+        
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+        Analizadorjs.errores.add(new MiErrorjs(s.left, s.right, TipoErrorjs.SINTACTICO, 
+                        "Se detectó un error sintáctico ("+s.value+")"));
+    }  
+:} 
+terminal igual, coma, dos_puntos;
+terminal igualacion, diferencia, menor_que, mayor_que, menor_igual, mayor_igual;
+terminal and, or, not;
+terminal suma, resta, multiplicacion, division, potencia, modulo;
+terminal String decimal,cadena,iden;
+terminal true_t, false_t;
+terminal apertura_parentesis, cierre_parentesis, apertura_llave, cierre_llave;
+terminal importar;
+terminal fin_de_linea;
+terminal salto;
+terminal definir_variable;
+terminal consola;
+terminal if_t, else_t, else_if, for_t, while_t, do_t, switch_t, case_t, default_t;
+terminal suma_doble, resta_doble;
+terminal break_t;
+terminal definir_clase;
+terminal comentsimple, comentario_multi;
+
+
+non terminal INICIO;
+non terminal EXPRESION;
+non terminal VALOR;
+non terminal DECLARACIONVARIABLE;
+non terminal LLAMADAMETODO;
+non terminal ASIGNACION;
+non terminal FINDELINEA;
+non terminal INSTRUCCIONESMETODO;
+non terminal INSTRUCCIONMETODO;
+non terminal PARAMSLLAMADA;
+non terminal SENTENCIA;
+non terminal GENERARIFELSE;
+non terminal GENERARIF;
+non terminal GENERARELSEIF;
+non terminal LISTACASE;
+non terminal INCREMENTO;
+non terminal ASIGNACIONSENTENCIAS;
+non terminal INSTRUCCIONESCLASE;
+non terminal INSTRUCCIONCLASE;
+non terminal LISTACLASES;
+non terminal CLASE;
+non terminal DECLARACIONMETODO;
+non terminal COMENTARIOS;
+non terminal COMENTLIST;
+
+
+
+precedence left suma;
+precedence left resta;
+precedence left multiplicacion;
+precedence left division;
+precedence left modulo;
+precedence left potencia;
+precedence left mayor_que;
+precedence left menor_que;
+precedence left mayor_igual;
+precedence left menor_igual;
+precedence left igualacion;
+precedence left diferencia;
+precedence left and;
+precedence left or;
+precedence left igual;
+precedence right not;
+
+
+
+start with INICIO;
+
+
+INICIO ::= LISTACLASES;
+
+LISTACLASES ::= LISTACLASES CLASE
+| LISTACLASES CLASE COMENTLIST
+| CLASE
+| COMENTLIST
+;
+
+CLASE ::= definir_clase iden apertura_llave salto INSTRUCCIONESCLASE cierre_llave salto
+| definir_clase iden apertura_llave salto cierre_llave salto
+;
+
+COMENTLIST ::= COMENTLIST COMENTARIOS
+| COMENTARIOS
+;
+
+COMENTARIOS ::= comentsimple 
+| comentario_multi salto
+;
+
+INSTRUCCIONESCLASE ::= INSTRUCCIONESCLASE INSTRUCCIONCLASE
+| INSTRUCCIONCLASE
+;
+
+INSTRUCCIONCLASE ::= DECLARACIONVARIABLE 
+| DECLARACIONMETODO
+| COMENTARIOS
+;
+
+DECLARACIONMETODO ::= iden apertura_parentesis PARAMSLLAMADA cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave salto
+|iden apertura_parentesis cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave salto
+|iden apertura_parentesis PARAMSLLAMADA cierre_parentesis apertura_llave salto cierre_llave salto;
+
+INSTRUCCIONESMETODO ::= INSTRUCCIONESMETODO INSTRUCCIONMETODO 
+| INSTRUCCIONMETODO 
+;
+
+INSTRUCCIONMETODO ::= DECLARACIONVARIABLE  
+| LLAMADAMETODO 
+| consola apertura_parentesis EXPRESION cierre_parentesis FINDELINEA
+| break_t FINDELINEA
+| SENTENCIA
+| ASIGNACION
+| INCREMENTO FINDELINEA
+| COMENTARIOS
+;
+
+
+
+
+LLAMADAMETODO ::= iden apertura_parentesis PARAMSLLAMADA cierre_parentesis FINDELINEA
+| iden apertura_parentesis cierre_parentesis FINDELINEA
+;
+
+PARAMSLLAMADA ::= PARAMSLLAMADA coma EXPRESION
+|EXPRESION 
+;
+
+DECLARACIONVARIABLE ::= definir_variable ASIGNACION;
+
+ASIGNACION ::= iden igual EXPRESION FINDELINEA
+| iden igual importar apertura_parentesis cadena cierre_parentesis FINDELINEA
+| apertura_parentesis iden igual EXPRESION cierre_parentesis 
+
+;
+
+FINDELINEA ::= salto
+| fin_de_linea salto
+| fin_de_linea
+;
+
+
+
+EXPRESION ::= apertura_parentesis EXPRESION cierre_parentesis
+| EXPRESION suma EXPRESION
+| EXPRESION resta EXPRESION
+| EXPRESION multiplicacion EXPRESION
+| EXPRESION division EXPRESION
+| EXPRESION potencia EXPRESION 
+| EXPRESION modulo EXPRESION 
+| resta EXPRESION
+| EXPRESION and EXPRESION 
+| EXPRESION or EXPRESION 
+| not EXPRESION
+| EXPRESION mayor_que EXPRESION
+| EXPRESION menor_que EXPRESION
+| EXPRESION mayor_igual EXPRESION
+| EXPRESION menor_igual EXPRESION
+| EXPRESION diferencia EXPRESION
+| EXPRESION igualacion EXPRESION
+| VALOR
+;
+
+VALOR ::= cadena
+| decimal
+| iden
+| true_t
+| false_t
+;
+
+
+
+SENTENCIA ::= GENERARIFELSE
+| switch_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto LISTACASE default_t dos_puntos salto INSTRUCCIONESMETODO cierre_llave FINDELINEA
+| for_t apertura_parentesis ASIGNACIONSENTENCIAS EXPRESION fin_de_linea INCREMENTO cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA
+| while_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA
+| do_t apertura_llave salto INSTRUCCIONESMETODO cierre_llave while_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis FINDELINEA
+;
+
+ASIGNACIONSENTENCIAS ::= ASIGNACION
+| DECLARACIONVARIABLE
+| EXPRESION
+| not ASIGNACION
+;
+
+GENERARIFELSE ::= GENERARIF else_t apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA
+| GENERARIF GENERARELSEIF else_t apertura_llave salto INSTRUCCIONESMETODO  cierre_llave FINDELINEA
+| GENERARIF GENERARELSEIF
+| GENERARIF
+; 
+
+GENERARIF::= if_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave
+|if_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA
+;
+
+GENERARELSEIF ::= else_if apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA	
+| else_if apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave 
+;	
+
+LISTACASE ::= LISTACASE case_t EXPRESION dos_puntos salto INSTRUCCIONESMETODO 
+| case_t EXPRESION dos_puntos salto INSTRUCCIONESMETODO 
+;
+
+
+INCREMENTO ::= iden suma_doble 
+| iden resta_doble
+;

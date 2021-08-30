@@ -1,0 +1,163 @@
+package Analizadorfca;
+import ASTfca.Erroresfca.*;
+import java_cup.runtime.*;
+
+parser code
+{:
+/**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+        Analizadorfca.errores.add(new MiErrorfca(s.left, s.right, TipoErrorfca.SINTACTICO, 
+                "Se detectó un error sintáctico ("+s.value+")"));
+        
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+        Analizadorfca.errores.add(new MiErrorfca(s.left, s.right, TipoErrorfca.SINTACTICO, 
+                        "Se detectó un error sintáctico ("+s.value+")"));
+    }  
+
+:}
+
+
+terminal fin_de_linea;
+terminal generar_reporte_estadistico;
+terminal comparar;
+terminal definir_globales;
+terminal grafica_de_barras;
+terminal grafica_de_pie;
+terminal grafica_de_lineas;
+
+terminal titulo_grafica, ejex, titulo_ejex, titulo_ejey;
+terminal valores_grafica;
+
+terminal archivo_grafica_lineas;
+
+terminal tipo_de_dato_string, tipo_de_dato_double;
+terminal concatenacion, puntaje_general, puntaje_especifico;
+terminal apertura_llave, cierre_llave, apertura_corchete, cierre_corchete, apertura_parentesis, cierre_parentesis;
+terminal igual, dos_puntos, coma;
+terminal String decimal,cadena,id;
+
+
+non terminal INICIO;
+non terminal INSTRUCCIONES;
+non terminal INSTRUCCION;
+non terminal GENERAR_ESTADISTICAS;
+non terminal CARGAR_PROYECTOS, DEFINIR_VARIABLES_GLOBALES, GRAFICA_BARRAS, GRAFICA_PIE, GRAFICA_LINEAS;
+non terminal VARIABLES_GLOBALES;
+non terminal INSTANCIA_VARIABLE;
+non terminal PUNTAJES;
+non terminal OBTENER_GENERAL, OBTENER_ESPECIFICO;
+non terminal INSTRUCCIONES_BARRAS;
+non terminal INSTRUCCION_BARRAS;
+non terminal CARACTERISTICAS_BARRAS;
+non terminal VALOR_BARRAS;
+non terminal INSTRUCCIONES_PIE;
+non terminal INSTRUCCION_PIE;
+non terminal CARACTERISTICAS_PIE;
+non terminal VALOR_PIE;
+non terminal INSTRUCCIONES_LINEAS;
+non terminal INSTRUCCION_LINEAS;
+non terminal CARACTERISTICAS_LINEAS;
+non terminal VALOR_LINEAS;
+non terminal PARAM;
+
+
+start with INICIO;
+
+INICIO ::= GENERAR_ESTADISTICAS;
+
+GENERAR_ESTADISTICAS ::= generar_reporte_estadistico apertura_llave INSTRUCCIONES cierre_llave;
+
+INSTRUCCIONES ::= INSTRUCCIONES INSTRUCCION
+| INSTRUCCION;
+
+INSTRUCCION ::= CARGAR_PROYECTOS
+| DEFINIR_VARIABLES_GLOBALES
+| GRAFICA_BARRAS
+| GRAFICA_PIE
+| GRAFICA_LINEAS;
+
+CARGAR_PROYECTOS ::= comparar apertura_parentesis cadena coma cadena cierre_parentesis fin_de_linea;
+
+DEFINIR_VARIABLES_GLOBALES ::= definir_globales apertura_llave VARIABLES_GLOBALES cierre_llave;
+
+VARIABLES_GLOBALES ::= VARIABLES_GLOBALES INSTANCIA_VARIABLE
+| INSTANCIA_VARIABLE;
+
+INSTANCIA_VARIABLE ::= tipo_de_dato_string id igual cadena fin_de_linea
+| tipo_de_dato_double id igual decimal fin_de_linea
+| PUNTAJES;
+
+PUNTAJES ::= tipo_de_dato_double id igual OBTENER_GENERAL fin_de_linea
+| tipo_de_dato_double id igual OBTENER_ESPECIFICO fin_de_linea;
+
+OBTENER_GENERAL ::= concatenacion apertura_llave puntaje_general cierre_llave; 
+
+OBTENER_ESPECIFICO ::= concatenacion apertura_llave puntaje_especifico coma cadena coma cadena coma cadena cierre_llave; 
+
+GRAFICA_BARRAS ::= grafica_de_barras apertura_llave INSTRUCCIONES_BARRAS cierre_llave;
+
+INSTRUCCIONES_BARRAS ::= INSTRUCCIONES_BARRAS INSTRUCCION_BARRAS
+| INSTRUCCION_BARRAS;
+
+INSTRUCCION_BARRAS ::= CARACTERISTICAS_BARRAS dos_puntos VALOR_BARRAS fin_de_linea;
+
+CARACTERISTICAS_BARRAS ::= titulo_grafica
+| ejex
+| valores_grafica
+| titulo_ejex
+| titulo_ejey;
+
+VALOR_BARRAS ::= PARAM
+| apertura_corchete PARAM coma PARAM coma PARAM cierre_corchete;
+
+PARAM ::= id
+| cadena
+| decimal
+| OBTENER_ESPECIFICO;
+
+GRAFICA_PIE ::= grafica_de_pie apertura_llave INSTRUCCIONES_PIE cierre_llave;
+
+INSTRUCCIONES_PIE ::= INSTRUCCIONES_PIE INSTRUCCION_PIE
+| INSTRUCCION_PIE;
+
+INSTRUCCION_PIE ::= CARACTERISTICAS_PIE dos_puntos VALOR_PIE fin_de_linea;
+
+CARACTERISTICAS_PIE ::= titulo_grafica
+| ejex
+| valores_grafica;
+
+VALOR_PIE ::= PARAM
+| apertura_corchete PARAM coma PARAM coma PARAM cierre_corchete;
+
+GRAFICA_LINEAS ::= grafica_de_lineas apertura_llave INSTRUCCIONES_LINEAS cierre_llave;
+
+INSTRUCCIONES_LINEAS ::= INSTRUCCIONES_LINEAS INSTRUCCION_LINEAS
+| INSTRUCCION_LINEAS;
+
+INSTRUCCION_LINEAS ::= CARACTERISTICAS_LINEAS dos_puntos VALOR_LINEAS fin_de_linea;
+
+CARACTERISTICAS_LINEAS ::= archivo_grafica_lineas
+|titulo_grafica;
+
+VALOR_LINEAS ::= id
+| cadena;
+
+
+
+
+
+
+
