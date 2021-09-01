@@ -6,7 +6,8 @@
 package Analizadorfca;
 
 import ASTfca.Erroresfca.ListaErroresfca;
-import ASTfca.Simbolos.TablaSimbolosfca;
+import ASTfca.Instrucciones.Instrucciones;
+
 import Vista.Principal;
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 public class Analizadorfca {
     private static Analizadorfca analizador;
     public static ListaErroresfca errores;
+    public static ArrayList<Instrucciones> instrucciones;
+    
+
     
     private Analizadorfca(){
         
@@ -45,6 +49,7 @@ public class Analizadorfca {
         if (analizador == null) {
             analizador = new Analizadorfca();
             errores = new ListaErroresfca();
+            instrucciones = new ArrayList<>();
 
         }
         return analizador;
@@ -53,6 +58,7 @@ public class Analizadorfca {
     public void LimpiarInstancia() {
         if (analizador != null) {
             errores.clear();
+            instrucciones.clear();
         } else {
             System.out.println("No existe un analizador");
         }
@@ -60,6 +66,12 @@ public class Analizadorfca {
     
     public void MostrarEr(){
         errores.mostrarEnConsola();
+    }
+    
+    public void MostrarMsj(){
+        instrucciones.forEach((t) ->{
+            Principal.EscribirMsj(t.setInstruccionMsj());
+        });
     }
 
 }

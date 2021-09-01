@@ -22,6 +22,7 @@ public class Principal extends javax.swing.JFrame {
     String [] opcionesArchivos ={"Guardar","Guardar Como", "Abrir Archivos"};
     Funciones func;
     File Archivo;
+    static String consoleMsj = "";
     /**
      * Creates new form Principal
      */
@@ -284,9 +285,9 @@ public class Principal extends javax.swing.JFrame {
         
         try{
             
-            //analizador.AnalizarCodigo(texto);
-            //analizador.MostrarEr();
-            
+            /*analizador.AnalizarCodigo(texto);
+            analizador.MostrarEr();
+            analizador.MostrarMsj();*/
             analizador2.AnalizarCodigo(texto);
             analizador2.MostrarEr();
             
@@ -296,6 +297,10 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnEjecutarActionPerformed
 
+    public static void EscribirMsj(String mensaje){
+        consoleMsj = consoleMsj + mensaje;
+        jTextArea1.setText(consoleMsj);
+    }
     public static void EscribirErrorEnConsola(String mensaje){
         jTextArea1.setText(mensaje);
     }

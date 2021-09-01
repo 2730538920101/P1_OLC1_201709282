@@ -5,10 +5,12 @@
  */
 package Analizadorjs;
 
+import ASTjs.Clases.Clase;
 import ASTjs.Erroresjs.ListaErroresjs;
 import Vista.Principal;
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 /**
  *
@@ -17,7 +19,7 @@ import java.io.StringReader;
 public class Analizadorjs {
     private static Analizadorjs analizador;
     public static ListaErroresjs errores;
-    
+    public static ArrayList<Clase> clases;
     public  boolean AnalizarCodigo(String entrada) {
         try {
             Sintacticojs sin = new Sintacticojs(
@@ -40,7 +42,7 @@ public class Analizadorjs {
         if (analizador == null) {
             analizador = new Analizadorjs();
             errores = new ListaErroresjs();
-            //listaAcciones = new ArrayList<>();
+            clases = new ArrayList<>();
         }
         return analizador;
     }
@@ -48,7 +50,7 @@ public class Analizadorjs {
     public void LimpiarInstancia() {
         if (analizador != null) {
             errores.clear();
-            //listaAcciones.clear();
+            clases.clear();
         } else {
             System.out.println("No existe un analizador");
         }

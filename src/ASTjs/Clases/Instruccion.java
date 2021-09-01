@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ASTfca.Simbolos;
+package ASTjs.Clases;
 
 /**
  *
  * @author Carlos Martinez
  */
-public enum TipoDatoSimbolofca {
-    CADENA,
-    DECIMAL,
-    ID,
-    PUNTAJES
+public enum Instruccion {
+    DECLARACIONMETODO, DECLARACIONVARIABLE, COMENTARIOS
 }
