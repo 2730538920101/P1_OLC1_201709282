@@ -15,15 +15,18 @@ public class Instrucciones {
     public Variable variable;
     public Metodo metodo;
     public Instruccion tipo;
+   
     
     public Instrucciones(Instruccion tipo, Variable variable){
         this.tipo = tipo;
         this.variable = variable;
+        
     }
     
     public Instrucciones(Instruccion tipo, Metodo metodo){
         this.tipo = tipo;
         this.metodo = metodo;
+      
     }
 
     /**
@@ -67,6 +70,7 @@ public class Instrucciones {
     public void setTipo(Instruccion tipo) {
         this.tipo = tipo;
     }
+
     
     public String getInstruccionesMsj(){
         String mensaje = "";
@@ -83,5 +87,6 @@ public class Instrucciones {
         }
         
     }
-    
+
+
 }

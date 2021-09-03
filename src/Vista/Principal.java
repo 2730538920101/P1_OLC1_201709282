@@ -277,19 +277,22 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         Ventana pagina = (Ventana)this.Tabulador.getSelectedComponent();
         String texto = pagina.jTextArea1.getText();
-        //Analizadorfca analizador;
-        //analizador = Analizadorfca.getInstancia();
-        
-        Analizadorjs analizador2;
+        Analizadorfca analizador;
+        analizador = Analizadorfca.getInstancia();
+        Analizadorfca.LimpiarInstancia();
+        /*Analizadorjs analizador2;
         analizador2 = Analizadorjs.getInstancia();
-        
+        Analizadorjs.LimpiarInstancia();
+        */
         try{
             
-            /*analizador.AnalizarCodigo(texto);
+            analizador.AnalizarCodigo(texto);
             analizador.MostrarEr();
-            analizador.MostrarMsj();*/
-            analizador2.AnalizarCodigo(texto);
-            analizador2.MostrarEr();
+            analizador.MostrarMsj();
+            
+            //analizador2.AnalizarCodigo(texto);
+            //analizador2.MostrarEr();
+            
             
         }catch(Exception e){
             System.out.println(e);

@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 package Analizadorjs;
-
-import ASTjs.Clases.Clase;
+import ASTjs.Clases.Clases;
 import ASTjs.Erroresjs.ListaErroresjs;
 import Vista.Principal;
 import java.io.BufferedReader;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 public class Analizadorjs {
     private static Analizadorjs analizador;
     public static ListaErroresjs errores;
-    public static ArrayList<Clase> clases;
+    public static ArrayList<Clases> clases;
     public  boolean AnalizarCodigo(String entrada) {
         try {
             Sintacticojs sin = new Sintacticojs(
@@ -42,22 +41,38 @@ public class Analizadorjs {
         if (analizador == null) {
             analizador = new Analizadorjs();
             errores = new ListaErroresjs();
-            clases = new ArrayList<>();
+            setClases(new ArrayList<>());
         }
         return analizador;
     }
 
-    public void LimpiarInstancia() {
+    public static void LimpiarInstancia() {
         if (analizador != null) {
             errores.clear();
-            clases.clear();
+            getClases().clear();
         } else {
             System.out.println("No existe un analizador");
         }
     }
     
-     public void MostrarEr(){
+    public void MostrarEr(){
         errores.mostrarEnConsola();
     }
+
+    /**
+     * @return the clases
+     */
+    public static ArrayList<Clases> getClases() {
+        return clases;
+    }
+
+    /**
+     * @param aClases the clases to set
+     */
+    public static void setClases(ArrayList<Clases> aClases) {
+        clases = aClases;
+    }
+     
+     
     
 }

@@ -5,17 +5,18 @@
         <group>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Clase.java</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Clases.java</file>
-            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Instrucciones.java</file>
-            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Parametros.java</file>
-            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Comentarios.java</file>
+            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorfca/Lexicofca.flex</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Metodo.java</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorjs/Analizadorjs.java</file>
-            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Instruccion.java</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorjs/Sintacticojs.cup</file>
+            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorfca/Analizadorfca.java</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Vista/Principal.java</file>
+            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Erroresjs/ListaErroresjs.java</file>
+            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorfca/Sintacticofca.cup</file>
+            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorjs/Lexicojs.flex</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Analizadorjs/Sintacticojs.java</file>
+            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/Control/Funciones.java</file>
             <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/Variable.java</file>
-            <file>file:/C:/Users/Carlos%20Martinez/Desktop/P1_OLC1_201709282/src/ASTjs/Clases/TipoMetodo.java</file>
         </group>
     </open-files>
 </project-private>

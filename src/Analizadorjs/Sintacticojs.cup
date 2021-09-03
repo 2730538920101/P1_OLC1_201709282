@@ -96,13 +96,13 @@ precedence left igual;
 precedence right not;
 
 start with INICIO;
-INICIO ::= INSTRUCCIONESGENERALES {:
+INICIO ::= INSTRUCCIONESGENERALES:lista {:
     System.out.println("INICIANDO EL ANALISIS GENERAL DEL ARCHIVO");
     System.out.println(listaCl.getTotalMsj());
     System.out.println("SE ANALIZARON UN TOTAL DE : " + claseslist.size()+ " CLASES");
     System.out.println("HAY UN TOTAL DE : " + comentlist.size()+" COMENTARIOS EN EL ARCHIVO");
+    Analizadorjs.setClases(lista);
     
-
 :};
 
 INSTRUCCIONESGENERALES ::= INSTRUCCIONESGENERALES:lista INSTRUCCIONGENERAL:valor{:
@@ -114,7 +114,9 @@ INSTRUCCIONESGENERALES ::= INSTRUCCIONESGENERALES:lista INSTRUCCIONGENERAL:valor
     ArrayList<Clases> bloque = new ArrayList<>();
     bloque.add(a);
     RESULT = bloque;
-:};
+:}
+|error FINDELINEA
+;
 
 INSTRUCCIONGENERAL ::= CLASE:a {:
     claseslist.add(a);

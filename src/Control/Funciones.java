@@ -5,11 +5,20 @@
  */
 package Control;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -21,8 +30,9 @@ public class Funciones {
     File archivo;
     FileInputStream entrada;
     FileOutputStream salida;
-    
-    
+    String[] nombreArchivos1;
+    String[] nombreArchivos2;
+   
     public Funciones(){
         seleccionar = new JFileChooser();
     }
@@ -110,6 +120,93 @@ public class Funciones {
             mensaje += "NO SE PUDO GUARDAR EL DOCUMENTO";
         }
         return mensaje;
+    }
+    
+    public String LeerArchivo(String archivo)throws IOException{
+        String mensaje = "";
+        try{
+            File arch1 = new File(archivo);
+            FileReader fr = new FileReader (arch1);
+            BufferedReader br = new BufferedReader(fr);
+             while (br.ready()) {
+                 mensaje = mensaje + br.readLine();
+             }
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return mensaje;
+    }
+    
+    public void setArchivos(String ruta1, String ruta2){
+        File dir1 = new File(ruta1);
+        File dir2 = new File(ruta2);
+        if(dir1.isDirectory()&& dir2.isDirectory()){
+            this.nombreArchivos1 = dir1.list();
+            this.nombreArchivos2 = dir2.list();
+        }
+        
+    }
+    
+    public String[] getArchivo1(){
+        return this.nombreArchivos1;
+    }
+    
+    public String[] getArchivo2(){
+        return this.nombreArchivos2;
+    }
+    
+    public void hacerPie(String titulo, String[] ejex, Double[] valores) throws IOException{
+        DefaultPieDataset dataset = new DefaultPieDataset( );
+        for (int i = 0; i < valores.length; i++) {
+            dataset.setValue(ejex[i],valores[i]);
+        }
+        JFreeChart chart = ChartFactory.createPieChart(
+         titulo,   // chart title
+         dataset,          // data
+         true,             // include legend
+         true,
+         false);
+         
+        int width = 640;   /* Width of the image */
+        int height = 480;  /* Height of the image */ 
+        File pieChart = new File( "PieChart.jpeg" ); 
+        ChartUtilities.saveChartAsJPEG( pieChart , chart , width , height );
+        
+    }
+    
+    public void hacerBarras(String titulo, String[] ejex, Double[] valores, String Titulox, String Tituloy) throws IOException{
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+        for (int i = 0; i < valores.length; i++) {
+            dataset.addValue(valores[i],"Porcentaje de copia", ejex[i]);
+        }
+        JFreeChart barChart = ChartFactory.createBarChart(
+         titulo, 
+         Titulox, Tituloy, 
+         dataset,PlotOrientation.VERTICAL, 
+         true, true, false);
+         
+        int width = 640;    /* Width of the image */
+        int height = 480;   /* Height of the image */ 
+        File BarChart = new File( "BarChart.jpeg" ); 
+        ChartUtilities.saveChartAsJPEG( BarChart , barChart , width , height );
+    }
+    
+    public void hacerLineas(String titulo, String[] ejex, Double[] valores, String Titulox, String Tituloy) throws IOException{
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+        for (int i = 0; i < valores.length; i++) {
+            dataset.addValue(valores[i],"Porcentaje de copia", ejex[i]);
+        }
+        JFreeChart barChart = ChartFactory.createBarChart(
+         titulo, 
+         Titulox, Tituloy, 
+         dataset,PlotOrientation.VERTICAL, 
+         true, true, false);
+         
+        int width = 640;    /* Width of the image */
+        int height = 480;   /* Height of the image */ 
+        File BarChart = new File( "BarChart.jpeg" ); 
+        ChartUtilities.saveChartAsJPEG( BarChart , barChart , width , height );
     }
     
     

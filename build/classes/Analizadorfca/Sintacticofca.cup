@@ -4,6 +4,20 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 import ASTfca.Instrucciones.Instrucciones;
 import ASTfca.Instrucciones.Instruccion;
+import ASTfca.Instrucciones.PuntajeGeneral;
+import ASTfca.Instrucciones.PuntajeEspecifico;
+import ASTfca.Instrucciones.Puntaje;
+import ASTfca.Instrucciones.TipoPuntaje;
+import ASTfca.Instrucciones.Variable;
+import ASTfca.Instrucciones.TipoVariable;
+import ASTfca.Instrucciones.Parametro;
+import ASTfca.Instrucciones.Caracteristicas;
+import ASTfca.Instrucciones.Carac;
+import ASTfca.Instrucciones.InstruccionesBarras;
+import ASTfca.Instrucciones.InstruccionesPie;
+import ASTfca.Instrucciones.InstruccionesLineas;
+
+
 
 parser code
 {:
@@ -44,7 +58,8 @@ terminal titulo_grafica, ejex, titulo_ejex, titulo_ejey;
 terminal valores_grafica;
 terminal archivo_grafica_lineas;
 terminal tipo_de_dato_string, tipo_de_dato_double;
-terminal concatenacion, puntaje_general, puntaje_especifico;
+terminal concatenacion;
+terminal String puntaje_general, puntaje_especifico;
 terminal apertura_llave, cierre_llave, apertura_corchete, cierre_corchete, apertura_parentesis, cierre_parentesis;
 terminal igual, dos_puntos, coma;
 terminal String decimal,cadena,id;
@@ -58,217 +73,270 @@ non terminal Instrucciones DEFINIR_VARIABLES_GLOBALES;
 non terminal Instrucciones GRAFICA_BARRAS;
 non terminal Instrucciones GRAFICA_PIE;
 non terminal Instrucciones GRAFICA_LINEAS;
-non terminal VARIABLES_GLOBALES; 
-non terminal INSTANCIA_VARIABLE;
+non terminal ArrayList<Variable> VARIABLES_GLOBALES; 
+non terminal Variable INSTANCIA_VARIABLE;
 non terminal PUNTAJES;
 non terminal OBTENER_GENERAL, OBTENER_ESPECIFICO;
-non terminal INSTRUCCIONES_BARRAS;
-non terminal INSTRUCCION_BARRAS;
+non terminal ArrayList<InstruccionesBarras> INSTRUCCIONES_BARRAS;
+non terminal InstruccionesBarras INSTRUCCION_BARRAS;
 non terminal CARACTERISTICAS_BARRAS;
-non terminal VALOR_BARRAS;
-non terminal INSTRUCCIONES_PIE;
-non terminal INSTRUCCION_PIE;
+non terminal ArrayList<Parametro> VALOR_BARRAS;
+non terminal ArrayList<InstruccionesPie> INSTRUCCIONES_PIE;
+non terminal InstruccionesPie INSTRUCCION_PIE;
 non terminal CARACTERISTICAS_PIE;
-non terminal VALOR_PIE;
-non terminal INSTRUCCIONES_LINEAS;
-non terminal INSTRUCCION_LINEAS;
+non terminal ArrayList<Parametro> VALOR_PIE;
+non terminal ArrayList<InstruccionesLineas> INSTRUCCIONES_LINEAS;
+non terminal InstruccionesLineas INSTRUCCION_LINEAS;
 non terminal CARACTERISTICAS_LINEAS;
-non terminal VALOR_LINEAS;
-non terminal PARAM;
-non terminal PARAMLIST;
+non terminal ArrayList<Parametro> VALOR_LINEAS;
+non terminal Parametro PARAM;
+non terminal ArrayList<Parametro> PARAMLIST;
 
 
 start with INICIO;
 
 INICIO ::= GENERAR_ESTADISTICAS {:
-System.out.println("INICIANDO ANALISIS"); 
+    System.out.println("INICIANDO ANALISIS"); 
 :};
 
 GENERAR_ESTADISTICAS ::= generar_reporte_estadistico:reporte apertura_llave INSTRUCCIONES:lista cierre_llave {: 
-System.out.println("token: " + reporte);
-Analizadorfca.instrucciones = lista;
+    System.out.println("token: " + reporte);
+    Analizadorfca.instrucciones = lista;
 :};
 
 INSTRUCCIONES ::= INSTRUCCIONES:l INSTRUCCION:valor {:
-ArrayList<Instrucciones> lista = l;
-lista.add((Instrucciones)valor);
-RESULT = lista;
+    ArrayList<Instrucciones> lista = l;
+    lista.add((Instrucciones)valor);
+    RESULT = lista;
 :}
 | INSTRUCCION:valor {:
-ArrayList<Instrucciones> lista = new ArrayList<>();
-lista.add((Instrucciones)valor);
-RESULT = lista;
+    ArrayList<Instrucciones> lista = new ArrayList<>();
+    lista.add((Instrucciones)valor);
+    RESULT = lista;
 :}
 ;
 
 INSTRUCCION ::= CARGAR_PROYECTOS:a {:
-RESULT = a;
+    RESULT = a;
 :}
 | DEFINIR_VARIABLES_GLOBALES:a {:
-RESULT = a; 
+    RESULT = a; 
 :}
 | GRAFICA_BARRAS:a {:
-RESULT = a;
+    RESULT = a;
 :}
 | GRAFICA_PIE:a {:
-RESULT = a;
+    RESULT = a;
 :}
 | GRAFICA_LINEAS:a {:
-RESULT = a;
+    
+    RESULT = a;
  :};
 
 CARGAR_PROYECTOS ::= comparar:valor apertura_parentesis cadena coma cadena cierre_parentesis fin_de_linea {:
    RESULT = new Instrucciones(valor, Instruccion.CARGAR_PROYECTO);
 :};
 
-DEFINIR_VARIABLES_GLOBALES ::= definir_globales:valor apertura_llave VARIABLES_GLOBALES cierre_llave {:
-    RESULT = new Instrucciones(valor, Instruccion.DEFINIR_GLOBALES);
+DEFINIR_VARIABLES_GLOBALES ::= definir_globales:valor apertura_llave VARIABLES_GLOBALES:lista cierre_llave {:
+    Instrucciones ins = new Instrucciones(valor, Instruccion.DEFINIR_GLOBALES);
+    ins.setVarlist(lista);
+    RESULT = ins;
 :};
 
-VARIABLES_GLOBALES ::= VARIABLES_GLOBALES INSTANCIA_VARIABLE {:
-
+VARIABLES_GLOBALES ::= VARIABLES_GLOBALES:lista INSTANCIA_VARIABLE:valor {:
+    lista.add((Variable)valor);
+    RESULT = lista;
+    
 :}
-| INSTANCIA_VARIABLE {:
-
+| INSTANCIA_VARIABLE:valor {:
+    ArrayList<Variable> varlist = new ArrayList<>();
+    varlist.add(valor);
+    RESULT = varlist;
 :};
 
-INSTANCIA_VARIABLE ::= tipo_de_dato_string id igual cadena fin_de_linea {:
-
+INSTANCIA_VARIABLE ::= tipo_de_dato_string id:identificador igual cadena:valor fin_de_linea {:
+    Variable var = new Variable(TipoVariable.STRING, identificador, valor);
+    RESULT = var;
 :}
-| tipo_de_dato_double id igual decimal fin_de_linea {:
-
+| tipo_de_dato_double id:identificador igual decimal:valor fin_de_linea {:
+    Variable var = new Variable(TipoVariable.DOUBLE, identificador, valor);
+    RESULT = var;
 :}
-| PUNTAJES {:
-
+| PUNTAJES:a {:
+    Variable var = new Variable(TipoVariable.PUNTAJE, (Puntaje)a);
+    RESULT = var;
 :};
 
-OBTENER_GENERAL ::= concatenacion apertura_llave puntaje_general cierre_llave {:
-
+OBTENER_GENERAL ::= concatenacion apertura_llave puntaje_general:valor cierre_llave {:
+    PuntajeGeneral pgeneral = new PuntajeGeneral(valor);
+    RESULT = pgeneral;
 :}; 
 
-OBTENER_ESPECIFICO ::= concatenacion apertura_llave puntaje_especifico coma cadena coma cadena coma cadena cierre_llave {:
-
+OBTENER_ESPECIFICO ::= concatenacion apertura_llave puntaje_especifico:valor coma cadena:str1 coma cadena:str2 coma cadena:str3 cierre_llave {:
+    PuntajeEspecifico pespecifico = new PuntajeEspecifico(valor,str1, str2, str3);
+    RESULT = pespecifico;
 :}; 
 
-PUNTAJES ::= tipo_de_dato_double id igual OBTENER_GENERAL fin_de_linea {:
-
+PUNTAJES ::= tipo_de_dato_double id:identificador igual OBTENER_GENERAL:valor fin_de_linea {:
+    Puntaje puntaje = new Puntaje(TipoPuntaje.GENERAL, identificador, (PuntajeGeneral)valor);
+    RESULT = puntaje;
 :}
-| tipo_de_dato_double id igual OBTENER_ESPECIFICO fin_de_linea {:
-
+| tipo_de_dato_double id:identificador igual OBTENER_ESPECIFICO:valor fin_de_linea {:
+    Puntaje puntaje = new Puntaje(TipoPuntaje.ESPECIFICO, identificador, (PuntajeEspecifico)valor);
+    RESULT = puntaje;
 :};
 
-GRAFICA_BARRAS ::= grafica_de_barras:valor apertura_llave INSTRUCCIONES_BARRAS cierre_llave{:
-   RESULT = new Instrucciones(valor, Instruccion.GRAFICA_BARRAS);
+GRAFICA_BARRAS ::= grafica_de_barras:valor apertura_llave INSTRUCCIONES_BARRAS:lista cierre_llave{:
+    Instrucciones ins = new Instrucciones(valor, Instruccion.GRAFICA_BARRAS);
+    ins.setInstb(lista);
+    RESULT = ins;
 :};
 
-INSTRUCCIONES_BARRAS ::= INSTRUCCIONES_BARRAS INSTRUCCION_BARRAS {:
-
+INSTRUCCIONES_BARRAS ::= INSTRUCCIONES_BARRAS:lista INSTRUCCION_BARRAS:valor {:
+    lista.add((InstruccionesBarras)valor);
+    RESULT = lista;
 :}
-| INSTRUCCION_BARRAS {:
-
+| INSTRUCCION_BARRAS:valor {:
+    ArrayList<InstruccionesBarras> insb = new ArrayList<>();
+    insb.add((InstruccionesBarras)valor);
+    RESULT = insb;
 :};
 
-INSTRUCCION_BARRAS ::= CARACTERISTICAS_BARRAS dos_puntos VALOR_BARRAS fin_de_linea {:
-
+INSTRUCCION_BARRAS ::= CARACTERISTICAS_BARRAS:carac dos_puntos VALOR_BARRAS:param fin_de_linea {:
+    InstruccionesBarras binst = new InstruccionesBarras((Carac)carac,param);
+    RESULT = binst;
 :};
 
 CARACTERISTICAS_BARRAS ::= titulo_grafica {:
-
+    Carac carac = new Carac(Caracteristicas.TITULO);
+    RESULT = carac;
 :}
 | ejex {:
-
+    Carac carac = new Carac(Caracteristicas.EJEX);
+    RESULT = carac;
 :}
 | valores_grafica {:
-
+    Carac carac = new Carac(Caracteristicas.VALORES);
+    RESULT = carac;
 :}
 | titulo_ejex {:
-
+    Carac carac = new Carac(Caracteristicas.TITULOX);
+    RESULT = carac;
 :}
 | titulo_ejey {:
-
+    Carac carac = new Carac(Caracteristicas.TITULOY);
+    RESULT = carac;
 :};
 
-VALOR_BARRAS ::= PARAM {:
-
+VALOR_BARRAS ::= PARAM:a {:
+    ArrayList<Parametro> paramlist = new ArrayList<>();
+    paramlist.add((Parametro)a);
+    RESULT = paramlist;
 :}
-| apertura_corchete PARAMLIST cierre_corchete {:
-
+| apertura_corchete PARAMLIST:lista cierre_corchete {:
+    RESULT = lista;
 :};
 
-PARAMLIST ::= PARAMLIST coma PARAM {:
 
-:}
-| PARAM {:
 
+GRAFICA_PIE ::= grafica_de_pie:valor apertura_llave INSTRUCCIONES_PIE:lista cierre_llave {:
+    Instrucciones ins = new Instrucciones(valor, Instruccion.GRAFICA_PIE);
+    ins.setInstp(lista);
+    RESULT = ins;
 :};
 
-PARAM ::= id {:
-
+INSTRUCCIONES_PIE ::= INSTRUCCIONES_PIE:lista INSTRUCCION_PIE:valor {: 
+    lista.add((InstruccionesPie)valor);
+    RESULT = lista;
 :}
-| cadena {:
-
-:}
-| decimal {:
-
-:}
-| OBTENER_ESPECIFICO {:
-
+| INSTRUCCION_PIE:valor {:
+    ArrayList<InstruccionesPie> insp = new ArrayList<>();
+    insp.add((InstruccionesPie)valor);
+    RESULT = insp;
 :};
 
-GRAFICA_PIE ::= grafica_de_pie:valor apertura_llave INSTRUCCIONES_PIE cierre_llave {:
-    RESULT = new Instrucciones(valor, Instruccion.GRAFICA_PIE);
-:};
-
-INSTRUCCIONES_PIE ::= INSTRUCCIONES_PIE INSTRUCCION_PIE {: 
-
-:}
-| INSTRUCCION_PIE {:
-
-:};
-
-INSTRUCCION_PIE ::= CARACTERISTICAS_PIE dos_puntos VALOR_PIE fin_de_linea {:
-
+INSTRUCCION_PIE ::= CARACTERISTICAS_PIE:carac dos_puntos VALOR_PIE:param fin_de_linea {:
+     InstruccionesPie pinst = new InstruccionesPie((Carac)carac,param);
+    RESULT = pinst;
 :};
 
 CARACTERISTICAS_PIE ::= titulo_grafica {:
-
+    Carac carac = new Carac(Caracteristicas.TITULO);
+    RESULT = carac;
 :}
 | ejex {:
-
+    Carac carac = new Carac(Caracteristicas.EJEX);
+    RESULT = carac;
 :}
 | valores_grafica {:
-
+    Carac carac = new Carac(Caracteristicas.VALORES);
+    RESULT = carac;
 :};
 
-VALOR_PIE ::= apertura_corchete PARAMLIST cierre_corchete {:
-
-:};
-
-GRAFICA_LINEAS ::= grafica_de_lineas:valor apertura_llave INSTRUCCIONES_LINEAS cierre_llave {:
-    RESULT = new Instrucciones(valor, Instruccion.GRAFICA_LINEAS);
-:};
-
-INSTRUCCIONES_LINEAS ::= INSTRUCCIONES_LINEAS INSTRUCCION_LINEAS {:
-
+VALOR_PIE ::= apertura_corchete PARAMLIST:a cierre_corchete {:
+    RESULT = a;
 :}
-| INSTRUCCION_LINEAS {:
-
+| PARAMLIST:a {:
+    RESULT = a;
 :};
 
-INSTRUCCION_LINEAS ::= CARACTERISTICAS_LINEAS dos_puntos VALOR_LINEAS fin_de_linea {:
+GRAFICA_LINEAS ::= grafica_de_lineas:valor apertura_llave INSTRUCCIONES_LINEAS:lista cierre_llave {:
+    Instrucciones ins = new Instrucciones(valor, Instruccion.GRAFICA_LINEAS);
+    ins.setInstl(lista);
+    RESULT = ins;
+:};
 
+INSTRUCCIONES_LINEAS ::= INSTRUCCIONES_LINEAS:lista INSTRUCCION_LINEAS:valor {:
+    lista.add((InstruccionesLineas)valor);
+    RESULT = lista;
+:}
+| INSTRUCCION_LINEAS:valor {:
+    ArrayList<InstruccionesLineas> insp = new ArrayList<>();
+    insp.add((InstruccionesLineas)valor);
+    RESULT = insp;
+:};
+
+INSTRUCCION_LINEAS ::= CARACTERISTICAS_LINEAS:carac dos_puntos VALOR_LINEAS:param fin_de_linea {:
+    InstruccionesLineas linst = new InstruccionesLineas((Carac)carac,param);
+    RESULT = linst;
 :};
 
 CARACTERISTICAS_LINEAS ::= archivo_grafica_lineas {:
-
+    Carac carac = new Carac(Caracteristicas.ARCHIVO);
+    RESULT = carac;
 :}
 |titulo_grafica {:
-
+    Carac carac = new Carac(Caracteristicas.TITULO);
+    RESULT = carac;
 :};
 
-VALOR_LINEAS ::= id {:
+VALOR_LINEAS ::= PARAMLIST:a {:
+    RESULT = a;
+:};
 
+PARAMLIST ::= PARAMLIST:lista coma PARAM:valor {:
+    lista.add((Parametro)valor);
+    RESULT = lista;
 :}
-| cadena {:
-    
+| PARAM:a {:
+    ArrayList<Parametro> paramlist = new ArrayList<>();
+    paramlist.add((Parametro)a);
+    RESULT = paramlist;
+:};
+
+PARAM ::= id:a {:
+    Parametro param = new Parametro((String)a);
+    RESULT = param;
+:}
+| cadena:a {:
+    Parametro param = new Parametro((String)a);
+    RESULT = param;   
+:}
+| decimal:a {:
+    Parametro param = new Parametro((String)a);
+    RESULT = param;
+:}
+| OBTENER_ESPECIFICO:a {:
+    Parametro param = new Parametro((PuntajeEspecifico)a);
+    RESULT = param;
 :};

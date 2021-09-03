@@ -55,7 +55,7 @@ public class Analizadorfca {
         return analizador;
     }
 
-    public void LimpiarInstancia() {
+    public static void LimpiarInstancia() {
         if (analizador != null) {
             errores.clear();
             instrucciones.clear();
@@ -73,5 +73,7 @@ public class Analizadorfca {
             Principal.EscribirMsj(t.setInstruccionMsj());
         });
     }
+    
+  
 
 }

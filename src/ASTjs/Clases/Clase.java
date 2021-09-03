@@ -69,9 +69,34 @@ public class Clase {
     public void setInstrucciones(ArrayList<Instrucciones> instrucciones) {
         this.instrucciones = instrucciones;
     }
+    
+    public int getCantidadInstrucciones(ArrayList<Instrucciones> instrucciones){
+        return instrucciones.size();
+    }
+    
+    public int getCantidadMetodos(){
+        ArrayList<Metodo> instMet = new ArrayList<>();
+        
+        for (int i = 0; i < this.instrucciones.size(); i++) {
+            if(instrucciones.get(i).tipo == Instruccion.DECLARACIONMETODO){
+                instMet.add(this.instrucciones.get(i).getMetodo());
+            }
+        }
+        return instMet.size();
+    }
+    public int getCantidadVariables(){
+        ArrayList<Variable> instVar = new ArrayList<>();
+        
+        for (int i = 0; i < this.instrucciones.size(); i++) {
+            if(instrucciones.get(i).tipo == Instruccion.DECLARACIONVARIABLE){
+                instVar.add(this.instrucciones.get(i).getVariable());
+            }
+        }
+        return instVar.size();
+    }
 
     public String getInsMjs(){
-        String mensaje = "\nCANTIDAD DE INSTRUCCIONES ALMACENADAS: " + this.instrucciones.size() + "\n";
+        String mensaje = "\nCanitdad de instrucciones de la clase: " + getCantidadInstrucciones(this.instrucciones) + "\n";
         for (int i = 0; i < this.instrucciones.size(); i++) {
             if(this.instrucciones.get(i) != null){
                 mensaje = mensaje + this.instrucciones.get(i).getInstruccionesMsj() + "\n";
@@ -83,6 +108,8 @@ public class Clase {
     public String getClasesMsj(){
         return "Se detecto la clase: " + this.IdClase + "\n"+ 
                 "con un total de: " + getLineasClase() + " lineas \n"+
+                "una cantidad de: "+ getCantidadMetodos() + " metodos"+ "\n"+
+                "una cantidad de: "+ getCantidadVariables() + " variables"+
                 "Con las siguientes instrucciones: "+ "\n" +getInsMjs();
     }
 
