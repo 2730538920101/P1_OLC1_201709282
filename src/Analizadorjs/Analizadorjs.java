@@ -41,7 +41,7 @@ public class Analizadorjs {
         if (analizador == null) {
             analizador = new Analizadorjs();
             errores = new ListaErroresjs();
-            setClases(new ArrayList<>());
+            clases = new ArrayList<>();
         }
         return analizador;
     }
@@ -49,7 +49,7 @@ public class Analizadorjs {
     public static void LimpiarInstancia() {
         if (analizador != null) {
             errores.clear();
-            getClases().clear();
+            clases.clear();
         } else {
             System.out.println("No existe un analizador");
         }
@@ -62,7 +62,7 @@ public class Analizadorjs {
     /**
      * @return the clases
      */
-    public static ArrayList<Clases> getClases() {
+    public ArrayList<Clases> getClases() {
         return clases;
     }
 
@@ -72,7 +72,6 @@ public class Analizadorjs {
     public static void setClases(ArrayList<Clases> aClases) {
         clases = aClases;
     }
-     
-     
+       
     
 }

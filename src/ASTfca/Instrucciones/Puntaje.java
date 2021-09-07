@@ -5,6 +5,9 @@
  */
 package ASTfca.Instrucciones;
 
+import Control.Funciones;
+import Vista.Principal;
+
 /**
  *
  * @author Carlos Martinez
@@ -28,7 +31,8 @@ public class Puntaje {
     public PuntajeEspecifico pespecifico;
     public String id;
     public TipoPuntaje tipo;
-    
+    public Funciones funciones = Principal.func;
+    public String valorg, valoresp;
     public Puntaje(TipoPuntaje tipo, String id, PuntajeGeneral pgeneral){
         this.tipo = tipo;
         this.id = id;
@@ -38,6 +42,16 @@ public class Puntaje {
     public Puntaje(TipoPuntaje tipo, String id, PuntajeEspecifico pespecifico){
         this.tipo = tipo;
         this.id = id;
+        this.pespecifico = pespecifico;
+    }
+    
+    public Puntaje(TipoPuntaje tipo, PuntajeGeneral pgeneral){
+        this.tipo = tipo;
+        this.pgeneral = pgeneral;
+    }
+    
+    public Puntaje(TipoPuntaje tipo, PuntajeEspecifico pespecifico){
+        this.tipo = tipo;
         this.pespecifico = pespecifico;
     }
     /**
@@ -81,6 +95,78 @@ public class Puntaje {
     public void setId(String id) {
         this.id = id;
     }
+    
+    
+    
+    public String getPuntajesMsj(){
+        switch(this.tipo){
+            case GENERAL:
+                return "Puntaje de tipo: " + getPgeneral().getGeneralMsj();
+            case ESPECIFICO:
+                return "Puntaje de tipo: " + getPespecifico().getEspecificoMsj();
+            default:
+                return "";
+        }
+    }
+    
+    public String getPuntajes(){
+        switch(this.tipo){
+            case GENERAL:
+                return funciones.ObtenerPuntajeGeneral();
+            case ESPECIFICO:
+                String buscar = getPespecifico().getTipo().toLowerCase().replace("\"","");
+                String nombreArchivo = getPespecifico().getNombreArchivo();
+                String nombreClase = getPespecifico().getNombreClase();
+                if(null != buscar)switch (buscar) {
+                    case "clases":
+                        return funciones.EspecificoClase(nombreArchivo, nombreClase);
+                    case "variable":
+                        return funciones.EspecificoVariable(nombreArchivo, nombreClase);
+                    case "metodo":
+                        return funciones.EspecificoMetodo(nombreArchivo, nombreClase);
+                    case "comentario":
+                        return funciones.EspecificoComentario(nombreArchivo);
+                    default:
+                        return "";
+                }
+                
+                
+                
+            default:
+                return "NO ENCONTRADO";
+           
+        }
+    }
+
+    /**
+     * @return the valorg
+     */
+    public String getValorg() {
+        return valorg;
+    }
+
+    /**
+     * @param valorg the valorg to set
+     */
+    public void setValorg(String valorg) {
+        this.valorg = valorg;
+    }
+
+    /**
+     * @return the valoresp
+     */
+    public String getValoresp() {
+        return valoresp;
+    }
+
+    /**
+     * @param valoresp the valoresp to set
+     */
+    public void setValoresp(String valoresp) {
+        this.valoresp = valoresp;
+    }
+    
+    
     
     
 }

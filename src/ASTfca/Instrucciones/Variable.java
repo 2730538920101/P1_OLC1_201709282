@@ -70,6 +70,8 @@ public class Variable {
     public String id;
     public String valor;
     public Puntaje valorp;
+    
+    
     public Variable(TipoVariable tipo, String id, String valor){
         this.tipo = tipo;
         this.id = id;
@@ -77,8 +79,19 @@ public class Variable {
     }
     public Variable(TipoVariable tipo, Puntaje valorp){
         this.tipo = tipo;
-        this.id = id;
         this.valorp = valorp;
     }
     
+    public String getVarMsj(){
+        switch(this.tipo){
+            case STRING:
+                return "Tipo String: " + this.getValor()+ " con el identificador: " + getId() + "\n";
+            case DOUBLE:
+                return "Tipo double: " + this.getValor()+ " con el identificador: " + getId() + "\n";
+            case PUNTAJE:
+                return getValorp().getPuntajesMsj();
+            default:
+                return "";
+        }
+    }
 }

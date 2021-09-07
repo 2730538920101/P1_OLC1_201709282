@@ -32,7 +32,7 @@ parser code
     public Clase clase;
     public ArrayList<Clase> claseslist = new ArrayList<>();
     public ArrayList<Comentarios> comentlist = new ArrayList<>();
-    public Clases listaCl = new Clases();
+    public Clases listaCl = new Clases(claseslist, comentlist);
 :} 
 terminal igual, coma, dos_puntos;
 terminal igualacion, diferencia, menor_que, mayor_que, menor_igual, mayor_igual;
@@ -97,12 +97,17 @@ precedence right not;
 
 start with INICIO;
 INICIO ::= INSTRUCCIONESGENERALES:lista {:
-    System.out.println("INICIANDO EL ANALISIS GENERAL DEL ARCHIVO");
-    System.out.println(listaCl.getTotalMsj());
-    System.out.println("SE ANALIZARON UN TOTAL DE : " + claseslist.size()+ " CLASES");
-    System.out.println("HAY UN TOTAL DE : " + comentlist.size()+" COMENTARIOS EN EL ARCHIVO");
-    Analizadorjs.setClases(lista);
-    
+    try{
+
+        System.out.println("INICIANDO EL ANALISIS GENERAL DEL ARCHIVO");
+        System.out.println(listaCl.getTotalMsj());
+        System.out.println("SE ANALIZARON UN TOTAL DE : " + claseslist.size()+ " CLASES");
+        System.out.println("HAY UN TOTAL DE : " + comentlist.size()+" COMENTARIOS EN EL ARCHIVO");
+
+        Analizadorjs.clases = lista;
+    }catch(Exception e){
+        System.out.println(e);
+    }
 :};
 
 INSTRUCCIONESGENERALES ::= INSTRUCCIONESGENERALES:lista INSTRUCCIONGENERAL:valor{:
@@ -119,13 +124,11 @@ INSTRUCCIONESGENERALES ::= INSTRUCCIONESGENERALES:lista INSTRUCCIONGENERAL:valor
 ;
 
 INSTRUCCIONGENERAL ::= CLASE:a {:
-    claseslist.add(a);
-    listaCl.setListaClases(claseslist);
+    listaCl.agregarClase(a);
     RESULT = listaCl;
 :}
 | COMENTARIOS:a {:
-    comentlist.add((Comentarios)a);
-    listaCl.setListaComentarios(comentlist);
+    listaCl.agregarComentario((Comentarios)a);
     RESULT = listaCl;
 :};
 
@@ -152,29 +155,33 @@ COMENTARIOS ::= comentsimple:valor {:
 :};
 
 INSTRUCCIONESCLASE ::= INSTRUCCIONESCLASE:lista INSTRUCCIONCLASE:valor {:
+    //System.out.println(valor.getInstruccionesMsj());
     lista.add((Instrucciones)valor);
     RESULT = lista;
 :}
 | INSTRUCCIONCLASE:ins {:
+    //System.out.println(ins.getInstruccionesMsj());
     ArrayList<Instrucciones> inslist = new ArrayList<>();
     inslist.add((Instrucciones)ins);
     RESULT = inslist;
 :};
 
-INSTRUCCIONCLASE ::= DECLARACIONVARIABLE:a {:
+INSTRUCCIONCLASE ::= DECLARACIONVARIABLE:a FINDELINEA{:
     Instrucciones instruc = new Instrucciones(Instruccion.DECLARACIONVARIABLE, (Variable)a);
     RESULT = instruc;
 :}
 | DECLARACIONMETODO:a {:
+    //System.out.println(a.getMetMsj());
     Instrucciones instruc = new Instrucciones(Instruccion.DECLARACIONMETODO, (Metodo)a);
     RESULT = instruc;
 :}
-| ASIGNACION:a {:
+| ASIGNACION:a FINDELINEA{:
     Instrucciones instruc = new Instrucciones(Instruccion.DECLARACIONVARIABLE, (Variable)a); 
     RESULT = instruc;
 :}
 | COMENTARIOS:a {:
-    comentlist.add((Comentarios)a);
+    //comentlist.add((Comentarios)a);
+    listaCl.agregarComentario((Comentarios)a);
     
 :};
 
@@ -199,7 +206,7 @@ INSTRUCCIONESMETODO ::= INSTRUCCIONESMETODO INSTRUCCIONMETODO {:
 
 :};
 
-INSTRUCCIONMETODO ::= DECLARACIONVARIABLE:a {:
+INSTRUCCIONMETODO ::= DECLARACIONVARIABLE:a FINDELINEA{:
     RESULT = a;
 :} 
 | LLAMADAMETODO {:
@@ -214,14 +221,15 @@ INSTRUCCIONMETODO ::= DECLARACIONVARIABLE:a {:
 | SENTENCIA {:
 
 :}
-| ASIGNACION:a {:
+| ASIGNACION:a FINDELINEA{:
     RESULT = a;
 :}
 | INCREMENTO FINDELINEA {:
 
 :}
 | COMENTARIOS:a {:
-    RESULT = a;
+    listaCl.agregarComentario((Comentarios)a);
+    RESULT = listaCl;
 :};
 
 LLAMADAMETODO ::= iden apertura_parentesis PARAMSLLAMADA cierre_parentesis FINDELINEA {:
@@ -244,19 +252,19 @@ PARAMSLLAMADA ::= PARAMSLLAMADA:paramlist coma EXPRESION:valor {:
 :};
 
 DECLARACIONVARIABLE ::= definir_variable ASIGNACION:a {:
-    
+    //System.out.println(a.getVarMsj());
     RESULT = a;
 :};
 
-ASIGNACION ::= iden:variable igual EXPRESION FINDELINEA {:
+ASIGNACION ::= iden:variable igual EXPRESION {:
     Variable  var = new Variable(variable);
     RESULT = var;
 :}
-| iden:variable igual importar apertura_parentesis cadena cierre_parentesis FINDELINEA {:
+| iden:variable igual importar apertura_parentesis cadena cierre_parentesis {:
     Variable  var = new Variable(variable);
     RESULT = var;
 :}
-| apertura_parentesis iden:variable igual EXPRESION cierre_parentesis {:
+| apertura_parentesis iden:variable igual EXPRESION cierre_parentesis{:
     Variable  var = new Variable(variable);
     RESULT = var;
 :};
@@ -348,7 +356,10 @@ SENTENCIA ::= GENERARIFELSE {:
 | switch_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto LISTACASE default_t dos_puntos salto INSTRUCCIONESMETODO cierre_llave FINDELINEA {:
 
 :}
-| for_t apertura_parentesis ASIGNACIONSENTENCIAS EXPRESION fin_de_linea INCREMENTO cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA {:
+| for_t apertura_parentesis ASIGNACIONSENTENCIAS fin_de_linea EXPRESION fin_de_linea INCREMENTO cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA {:
+
+:}
+| for_t apertura_parentesis ASIGNACIONSENTENCIAS fin_de_linea EXPRESION fin_de_linea iden igual EXPRESION cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA {:
 
 :}
 | while_t apertura_parentesis ASIGNACIONSENTENCIAS cierre_parentesis apertura_llave salto INSTRUCCIONESMETODO cierre_llave FINDELINEA {:

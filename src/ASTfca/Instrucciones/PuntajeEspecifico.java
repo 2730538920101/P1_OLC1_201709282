@@ -22,6 +22,12 @@ public class PuntajeEspecifico {
         this.nombreClase = nombreClase;
     }
     
+    public PuntajeEspecifico(String valor, String nombreArchivo, String tipo){
+        this.valor = valor;
+        this.nombreArchivo = nombreArchivo;
+        this.tipo = tipo;
+       
+    }
     
     /**
      * @return the valor
@@ -78,4 +84,15 @@ public class PuntajeEspecifico {
     public void setNombreClase(String nombreClase) {
         this.nombreClase = nombreClase;
     }
+    
+    public String getEspecificoMsj(){
+        if(getTipo().equalsIgnoreCase("comentario")){
+            return this.valor + "en el archivo: " + getNombreArchivo() + " Valor que desea buscar: " + getTipo() + "\n";
+        }else{
+            return this.valor + "en el archivo: " + getNombreArchivo() + " Valor que desea buscar: " + getTipo() + " en la clase: " + getNombreClase() + "\n";
+        }
+        
+    }
+    
+    
 }

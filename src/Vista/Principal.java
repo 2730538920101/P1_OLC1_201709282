@@ -20,7 +20,7 @@ public class Principal extends javax.swing.JFrame {
  
     
     String [] opcionesArchivos ={"Guardar","Guardar Como", "Abrir Archivos"};
-    Funciones func;
+    public static Funciones func;
     File Archivo;
     static String consoleMsj = "";
     /**
@@ -280,7 +280,8 @@ public class Principal extends javax.swing.JFrame {
         Analizadorfca analizador;
         analizador = Analizadorfca.getInstancia();
         Analizadorfca.LimpiarInstancia();
-        /*Analizadorjs analizador2;
+        /*
+        Analizadorjs analizador2;
         analizador2 = Analizadorjs.getInstancia();
         Analizadorjs.LimpiarInstancia();
         */
@@ -289,11 +290,13 @@ public class Principal extends javax.swing.JFrame {
             analizador.AnalizarCodigo(texto);
             analizador.MostrarEr();
             analizador.MostrarMsj();
-            
-            //analizador2.AnalizarCodigo(texto);
-            //analizador2.MostrarEr();
-            
-            
+            analizador.Ejecutarfca();
+            //analizador.verCambios();
+            /*
+            analizador2.AnalizarCodigo(texto);
+            analizador2.MostrarEr();
+            analizador2.ver();
+            */
         }catch(Exception e){
             System.out.println(e);
         }

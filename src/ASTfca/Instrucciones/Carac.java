@@ -28,4 +28,23 @@ public class Carac {
     public Carac(Caracteristicas tipo){
         this.tipo = tipo;
     }
+    
+    public String getCaracteristicasMsj(){
+        switch(getTipo()){
+            case TITULO:
+                return "Titulo";
+            case EJEX:
+                return "Ejex";
+            case VALORES:
+                return "Valores";
+            case ARCHIVO:
+                return "Archivo";
+            case TITULOX:
+                return "TituloX";
+            case TITULOY:
+                return "TituloY";
+            default:
+                return "";
+        }   
+    }
 }

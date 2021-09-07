@@ -8,6 +8,7 @@ import ASTfca.Instrucciones.PuntajeGeneral;
 import ASTfca.Instrucciones.PuntajeEspecifico;
 import ASTfca.Instrucciones.Puntaje;
 import ASTfca.Instrucciones.TipoPuntaje;
+import ASTfca.Instrucciones.TipoDato;
 import ASTfca.Instrucciones.Variable;
 import ASTfca.Instrucciones.TipoVariable;
 import ASTfca.Instrucciones.Parametro;
@@ -16,6 +17,7 @@ import ASTfca.Instrucciones.Carac;
 import ASTfca.Instrucciones.InstruccionesBarras;
 import ASTfca.Instrucciones.InstruccionesPie;
 import ASTfca.Instrucciones.InstruccionesLineas;
+import ASTfca.Instrucciones.Compare;
 
 
 
@@ -133,8 +135,11 @@ INSTRUCCION ::= CARGAR_PROYECTOS:a {:
     RESULT = a;
  :};
 
-CARGAR_PROYECTOS ::= comparar:valor apertura_parentesis cadena coma cadena cierre_parentesis fin_de_linea {:
-   RESULT = new Instrucciones(valor, Instruccion.CARGAR_PROYECTO);
+CARGAR_PROYECTOS ::= comparar:valor apertura_parentesis cadena:r1 coma cadena:r2 cierre_parentesis fin_de_linea {:
+    Instrucciones ins = new Instrucciones(valor, Instruccion.CARGAR_PROYECTO);
+    Compare comparar = new Compare(r1,r2);
+    ins.setComparar(comparar);
+    RESULT = ins;
 :};
 
 DEFINIR_VARIABLES_GLOBALES ::= definir_globales:valor apertura_llave VARIABLES_GLOBALES:lista cierre_llave {:
@@ -174,6 +179,10 @@ OBTENER_GENERAL ::= concatenacion apertura_llave puntaje_general:valor cierre_ll
 
 OBTENER_ESPECIFICO ::= concatenacion apertura_llave puntaje_especifico:valor coma cadena:str1 coma cadena:str2 coma cadena:str3 cierre_llave {:
     PuntajeEspecifico pespecifico = new PuntajeEspecifico(valor,str1, str2, str3);
+    RESULT = pespecifico;
+:}
+|concatenacion apertura_llave puntaje_especifico:valor coma cadena:str1 coma cadena:str2 cierre_llave {:
+    PuntajeEspecifico pespecifico = new PuntajeEspecifico(valor,str1, str2);
     RESULT = pespecifico;
 :}; 
 
@@ -228,10 +237,8 @@ CARACTERISTICAS_BARRAS ::= titulo_grafica {:
     RESULT = carac;
 :};
 
-VALOR_BARRAS ::= PARAM:a {:
-    ArrayList<Parametro> paramlist = new ArrayList<>();
-    paramlist.add((Parametro)a);
-    RESULT = paramlist;
+VALOR_BARRAS ::= PARAMLIST:a {:
+    RESULT = a;
 :}
 | apertura_corchete PARAMLIST:lista cierre_corchete {:
     RESULT = lista;
@@ -325,18 +332,22 @@ PARAMLIST ::= PARAMLIST:lista coma PARAM:valor {:
 :};
 
 PARAM ::= id:a {:
-    Parametro param = new Parametro((String)a);
+    Parametro param = new Parametro(TipoDato.IDENTIFICADOR, (String)a);
     RESULT = param;
 :}
 | cadena:a {:
-    Parametro param = new Parametro((String)a);
+    Parametro param = new Parametro(TipoDato.CADENA, (String)a);
     RESULT = param;   
 :}
 | decimal:a {:
-    Parametro param = new Parametro((String)a);
+    Parametro param = new Parametro(TipoDato.DECIMAL, (String)a);
     RESULT = param;
 :}
 | OBTENER_ESPECIFICO:a {:
-    Parametro param = new Parametro((PuntajeEspecifico)a);
+    Parametro param = new Parametro(TipoDato.PUNTAJE_ESPECIFICO, (PuntajeEspecifico)a);
+    RESULT = param;
+:}
+| OBTENER_GENERAL:a {:
+    Parametro param = new Parametro(TipoDato.PUNTAJE_GENERAL, (PuntajeGeneral)a);
     RESULT = param;
 :};

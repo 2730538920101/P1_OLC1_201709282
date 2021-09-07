@@ -10,5 +10,5 @@ package ASTfca.Instrucciones;
  * @author Carlos Martinez
  */
 public enum TipoVariable {
-    STRING, DOUBLE, PUNTAJE
+    STRING, DOUBLE, PUNTAJE, ID
 }

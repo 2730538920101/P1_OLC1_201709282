@@ -109,7 +109,7 @@ public class Clase {
         return "Se detecto la clase: " + this.IdClase + "\n"+ 
                 "con un total de: " + getLineasClase() + " lineas \n"+
                 "una cantidad de: "+ getCantidadMetodos() + " metodos"+ "\n"+
-                "una cantidad de: "+ getCantidadVariables() + " variables"+
+                "una cantidad de: "+ getCantidadVariables() + " variables"+ "\n"+
                 "Con las siguientes instrucciones: "+ "\n" +getInsMjs();
     }
 

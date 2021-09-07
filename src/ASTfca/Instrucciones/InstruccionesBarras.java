@@ -47,4 +47,16 @@ public class InstruccionesBarras {
         this.parametro = parametro;
     }
     
+    public String getParamMsj(){
+        String mensaje = "";
+        for (int i = 0; i < getParametro().size(); i++) {
+            mensaje = mensaje + getParametro().get(i).getParamMsj();
+        }
+        return mensaje;
+    }
+    
+    public String getInsBarrasMsj(){
+        return "Caracteristica: " + getTipo().getCaracteristicasMsj() + " \nCon los Parametros: \n" + getParamMsj();
+    }
+    
 }

@@ -46,4 +46,15 @@ public class InstruccionesPie {
         this.tipo = tipo;
         this.parametro = parametro;
     }
+    public String getParamMsj(){
+        String mensaje = "";
+        for (int i = 0; i < getParametro().size(); i++) {
+            mensaje = mensaje + getParametro().get(i).getParamMsj();
+        }
+        return mensaje;
+    }
+    
+    public String getInsPieMsj(){
+        return "Caracteristica: " + getTipo().getCaracteristicasMsj() + " \nCon los Parametros: \n" + getParamMsj();
+    }
 }

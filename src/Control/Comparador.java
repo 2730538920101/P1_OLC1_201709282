@@ -29,7 +29,7 @@ public class Comparador {
     public int totalM;
     public int totalCLR;
     public int totalCL;
-    public double PuntajeGeneral;
+    public String PuntajeGeneral;
 
     public Comparador(ArrayList<Archivo> proyecto1 , ArrayList<Archivo> proyecto2){
         this.proyecto1 = proyecto1;
@@ -354,7 +354,7 @@ public class Comparador {
     /**
      * @return the PuntajeGeneral
      */
-    public double getPuntajeGeneral() {
+    public String getPuntajeGeneral() {
         return PuntajeGeneral;
     }
 
@@ -364,13 +364,12 @@ public class Comparador {
     public void setPuntajeGeneral() {
         
         double parte1 = ((((double)getTotalCMR()/(double)getTotalCM())*(0.2))+(((double)getTotalVR()/(double)getTotalV())*(0.2))+(((double)getTotalMR()/(double)getTotalM())*(0.3))+(((double)getTotalCLR()/(double)getTotalCL())*(0.3)));
-        System.out.println("PUNTAJE GENERAL: " + parte1);
         DecimalFormat formato = new DecimalFormat("#0.0");
-        System.out.println("EL PUNTAJE GENERAL CALCULADO ES: "+formato.format(parte1));
-        this.PuntajeGeneral = parte1;
+        this.PuntajeGeneral =  formato.format(parte1);
+        
     }
     
     
-    
+   
     
 }

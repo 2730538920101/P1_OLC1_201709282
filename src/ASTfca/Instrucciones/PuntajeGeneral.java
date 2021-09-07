@@ -28,4 +28,8 @@ public class PuntajeGeneral {
     public PuntajeGeneral(String valor){
         this.valor = valor;
     }
+    
+    public String getGeneralMsj(){
+        return getValor() + "\n";
+    }
 }

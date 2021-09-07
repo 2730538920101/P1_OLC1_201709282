@@ -74,6 +74,12 @@ public class Analizadorfca {
         });
     }
     
-  
+    public void Ejecutarfca(){
+        System.out.println("Cantidad de instrucciones reconocidas: " + instrucciones.size());
+        instrucciones.forEach( (ins) -> {
+            ins.Accion();
+        });
+    }
+
 
 }
