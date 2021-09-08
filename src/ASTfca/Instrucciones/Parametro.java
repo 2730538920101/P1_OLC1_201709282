@@ -7,6 +7,7 @@ package ASTfca.Instrucciones;
 
 
 
+
 import Control.Funciones;
 import Vista.Principal;
 import java.util.ArrayList;
@@ -84,9 +85,8 @@ public class Parametro {
             case IDENTIFICADOR:
                 for (int i = 0; i < varlist.size(); i++) {
                     if(getValor().equalsIgnoreCase(varlist.get(i).getId())){
-                        setValor(varlist.get(i).getValor().replace("\"", ""));
+                        setValor(varlist.get(i).getValor().replace("\"", ""));   
                     }
-                
                 }
                 return getValor();
             case DECIMAL:
@@ -95,10 +95,12 @@ public class Parametro {
                 return getValor().replace("\"", "");
             case PUNTAJE_ESPECIFICO:
                 Puntaje punt = new Puntaje(TipoPuntaje.ESPECIFICO, getPespecifico());
-                return punt.getPuntajes();
+                setValor(punt.getPuntajes());
+                return getValor();
             case PUNTAJE_GENERAL:
                 Puntaje punt2 = new Puntaje(TipoPuntaje.GENERAL, getPgeneral());
-                return punt2.getPuntajes();
+                setValor(punt2.getPuntajes());
+                return getValor();
             default:
                 return "";
         }

@@ -21,8 +21,10 @@ import java.util.Collections;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -494,43 +496,61 @@ public class Funciones {
     public String[] getArchivo2(){
         return this.getNombreArchivos2();
     }
-    
-    public void hacerPie(String titulo, String[] ejex, Double[] valores) throws IOException{
-        DefaultPieDataset dataset = new DefaultPieDataset( );
-        for (int i = 0; i < valores.length; i++) {
-            dataset.setValue(ejex[i],valores[i]);
-        }
-        JFreeChart chart = ChartFactory.createPieChart(
-         titulo,   // chart title
-         dataset,          // data
-         true,             // include legend
-         true,
-         false);
-         
-        int width = 640;   /* Width of the image */
-        int height = 480;  /* Height of the image */ 
-        File pieChart = new File( "PieChart.jpeg" ); 
-        ChartUtilities.saveChartAsJPEG( pieChart , chart , width , height );
-        
-    }
-    
-
-    
-    public void hacerLineas(String titulo, String[] ejex, Double[] valores, String Titulox, String Tituloy) throws IOException{
+    public int lineascont = 0;
+    public void hacerLineas(String[] titulo, String[] nombreArchivo) throws IOException{
+        lineascont++;
+        int totalGclases1 = 0;
+        int totalGmetodos1 = 0;
+        int totalGvariables1 = 0;
+        int totalGcomentarios1 = 0;
+        int totalGclases2 = 0;
+        int totalGmetodos2 = 0;
+        int totalGvariables2 = 0;
+        int totalGcomentarios2 = 0;
         DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
-        for (int i = 0; i < valores.length; i++) {
-            dataset.addValue(valores[i],"Porcentaje de copia", ejex[i]);
+        for (int i = 0; i < getProyecto1().size(); i++) {
+            if(nombreArchivo[0].equalsIgnoreCase(getProyecto1().get(i).getNombre())){
+                totalGclases1 = getProyecto1().get(i).getTotalClases();
+                totalGmetodos1 = getProyecto1().get(i).getTotalMetodos();
+                totalGvariables1 = getProyecto1().get(i).getTotalVariables();
+                totalGcomentarios1 = getProyecto1().get(i).getTotalComentarios();
+                dataset.addValue(totalGclases1, "PROYECTO 1", "CLASES");
+                dataset.addValue(totalGvariables1, "PROYECTO 1", "VARIABLES");
+                dataset.addValue(totalGmetodos1, "PROYECTO 1", "METODOS");
+                dataset.addValue(totalGcomentarios1, "PROYECTO 1", "COMENTARIOS");
+            }
         }
-        JFreeChart barChart = ChartFactory.createBarChart(
-         titulo, 
-         Titulox, Tituloy, 
-         dataset,PlotOrientation.VERTICAL, 
-         true, true, false);
-         
+        for (int i = 0; i < getProyecto2().size(); i++) {
+            if(nombreArchivo[0].equalsIgnoreCase(getProyecto1().get(i).getNombre())){
+                totalGclases2 = getProyecto2().get(i).getTotalClases();
+                totalGmetodos2 = getProyecto2().get(i).getTotalMetodos();
+                totalGvariables2 = getProyecto2().get(i).getTotalVariables();
+                totalGcomentarios2 = getProyecto2().get(i).getTotalComentarios();
+                dataset.addValue(totalGclases2, "PROYECTO 2", "CLASES");
+                dataset.addValue(totalGvariables2, "PROYECTO 2", "VARIABLES");
+                dataset.addValue(totalGmetodos2, "PROYECTO 2", "METODOS");
+                dataset.addValue(totalGcomentarios2, "PROYECTO 2", "COMENTARIOS");
+            }
+        }
+        
+        JFreeChart lineChartObject = ChartFactory.createLineChart(
+        titulo[0],"TOTALES",
+        "CANTIDAD",        
+        dataset,PlotOrientation.VERTICAL,
+        true,true,false);
+
         int width = 640;    /* Width of the image */
         int height = 480;   /* Height of the image */ 
-        File BarChart = new File( "BarChart.jpeg" ); 
-        ChartUtilities.saveChartAsJPEG( BarChart , barChart , width , height );
+        
+        try{
+            final ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
+            final File lineChart = new File( "LineChart"+String.valueOf(lineascont)+".png" ); 
+            ChartUtilities.saveChartAsPNG(lineChart ,lineChartObject, width ,height, info);
+       
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        System.out.println("GRAFICA DE LINEAS GENERADA");
     }
 
     /**

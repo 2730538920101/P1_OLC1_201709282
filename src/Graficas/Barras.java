@@ -8,8 +8,10 @@ package Graficas;
 import java.io.File;
 import java.io.IOException;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -20,25 +22,37 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class Barras {
     public String[] titulo, tituloX, tituloY;
     public String[] ejex;
-    public Double[] valores;
+    public String[] valores;
+    public int contBarras;
     public Barras(){
         
     }
-    public void hacerBarras(String[] titulo, String[] ejex, Double[] valores, String[] Titulox, String[] Tituloy) throws IOException{
+    public void hacerBarras(String[] titulo, String[] ejex, String[] valores, String[] Titulox, String[] Tituloy) throws IOException{
+        contBarras++;
         DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+        
         for (int i = 0; i < valores.length; i++) {
-            dataset.addValue(valores[i],"Porcentaje de copia", ejex[i]);
+            double val = Double.parseDouble(valores[i]);    
+            dataset.addValue(val,"Porcentaje de copia", ejex[i]);
         }
         JFreeChart barChart = ChartFactory.createBarChart(
         titulo[0], 
         Titulox[0], Tituloy[0], 
         dataset,PlotOrientation.VERTICAL, 
         true, true, false);
-         
+
         int width = 640;    /* Width of the image */
         int height = 480;   /* Height of the image */ 
-        File BarChart = new File( "BarChart.jpeg" ); 
-        ChartUtilities.saveChartAsJPEG( BarChart , barChart , width , height );
+        try{
+            final ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
+            final File BarChart = new File( "BarChart"+String.valueOf(contBarras)+".png" ); 
+            ChartUtilities.saveChartAsPNG(BarChart , barChart , width , height, info );
+            System.out.println("GRAFICA DE BARRAS GENERADA");
+        }catch(Exception e){
+            System.out.println(e);
+        } 
+         
+       
     }
 
     /**
@@ -100,14 +114,14 @@ public class Barras {
     /**
      * @return the valores
      */
-    public Double[] getValores() {
+    public String[] getValores() {
         return valores;
     }
 
     /**
      * @param valores the valores to set
      */
-    public void setValores(Double[] valores) {
+    public void setValores(String[] valores) {
         this.valores = valores;
     }
     

@@ -8,6 +8,7 @@ package ASTfca.Instrucciones;
 import Control.Archivo;
 import Control.Funciones;
 import Graficas.Barras;
+import Graficas.Pie;
 import Vista.Principal;
 import java.util.ArrayList;
 
@@ -222,6 +223,7 @@ public class Instrucciones{
                                 var = varlist.get(i).getValorp().getId();
                                 valor = varlist.get(i).getValorp().getPuntajes();
                                 varlist.get(i).setValor(valor);
+                                varlist.get(i).setId(var);
                                 break;
                         }
                         
@@ -238,9 +240,6 @@ public class Instrucciones{
                                     res = res + instb.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta = res.split(";");
-                                for (int j = 0; j < respuesta.length; j++) {
-                                    System.out.println("res: " + respuesta[j]);
-                                }
                                 bar.setTitulo(respuesta);
                                 break;
                             
@@ -250,9 +249,7 @@ public class Instrucciones{
                                     res2 = res2 + instb.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta2 = res2.split(";");
-                                for (int j = 0; j < respuesta2.length; j++) {
-                                    System.out.println("res: " + respuesta2[j]);
-                                }
+                                bar.setEjex(respuesta2);
                                 break;
                             
                             case VALORES:
@@ -261,9 +258,7 @@ public class Instrucciones{
                                     res3 = res3 + instb.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta3 = res3.split(";");
-                                for (int j = 0; j < respuesta3.length; j++) {
-                                    System.out.println("res: " + respuesta3[j]);
-                                }
+                                bar.setValores(respuesta3);
                                 break;
                                 
                             case TITULOX:
@@ -272,9 +267,7 @@ public class Instrucciones{
                                     res4 = res4 + instb.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta4 = res4.split(";");
-                                for (int j = 0; j < respuesta4.length; j++) {
-                                    System.out.println("res: " + respuesta4[j]);
-                                }
+                                bar.setTituloX(respuesta4);
                                 break;
                                 
                             case TITULOY:
@@ -283,14 +276,14 @@ public class Instrucciones{
                                     res5 = res5 + instb.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta5 = res5.split(";");
-                                for (int j = 0; j < respuesta5.length; j++) {
-                                    System.out.println("res: " + respuesta5[j]);
-                                }
+                                bar.setTituloY(respuesta5);
                                 break;
                         }
                     }
+                    bar.hacerBarras(bar.getTitulo(),bar.getEjex(), bar.getValores(), bar.getTituloX(), bar.getTituloY());
                     break;
                 case GRAFICA_PIE:
+                    Pie pie = new Pie();
                     for (int i = 0; i < instp.size(); i++) {
                         switch(instp.get(i).getTipo().getTipo()){
                             case TITULO:
@@ -299,9 +292,7 @@ public class Instrucciones{
                                     res = res + instp.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta = res.split(";");
-                                for (int j = 0; j < respuesta.length; j++) {
-                                    System.out.println("res: " + respuesta[j]);
-                                }
+                                pie.setTitulo(respuesta);
                                 break;
                             
                             case EJEX:
@@ -310,9 +301,7 @@ public class Instrucciones{
                                     res2 = res2 + instp.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta2 = res2.split(";");
-                                for (int j = 0; j < respuesta2.length; j++) {
-                                    System.out.println("res: " + respuesta2[j]);
-                                }
+                                pie.setEjex(respuesta2);
                                 break;
                             
                             case VALORES:
@@ -321,14 +310,15 @@ public class Instrucciones{
                                     res3 = res3 + instp.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
                                 String[] respuesta3 = res3.split(";");
-                                for (int j = 0; j < respuesta3.length; j++) {
-                                    System.out.println("res: " + respuesta3[j]);
-                                }
+                                pie.setValores(respuesta3);
                                 break;
                         }
                     }
+                    pie.hacerPie(pie.getTitulo(), pie.getEjex(), pie.getValores());
                     break;
                 case GRAFICA_LINEAS:
+                    String[] respuesta = new String[1];
+                    String[] respuesta2 = new String[1];
                     for (int i = 0; i < instl.size(); i++) {
                         switch(instl.get(i).getTipo().getTipo()){
                             case TITULO:
@@ -336,23 +326,20 @@ public class Instrucciones{
                                 for (int j = 0; j < instl.get(i).getParametro().size(); j++) {
                                     res = res + instl.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
-                                String[] respuesta = res.split(";");
-                                for (int j = 0; j < respuesta.length; j++) {
-                                    System.out.println("res: " + respuesta[j]);
-                                }
+                                respuesta = res.split(";");
+
                                 break;
                             case ARCHIVO:
                                 String res2 = "";
                                 for (int j = 0; j < instl.get(i).getParametro().size(); j++) {
                                     res2 = res2 + instl.get(i).getParametro().get(j).getValorParam() + ";";
                                 }
-                                String[] respuesta2 = res2.split(";");
-                                for (int j = 0; j < respuesta2.length; j++) {
-                                    System.out.println("res: " + respuesta2[j]);
-                                }
+                                respuesta2 = res2.split(";");
+
                                 break;
                         }
                     }
+                    funciones.hacerLineas(respuesta, respuesta2);
                     break;
                 default:
                     break;
