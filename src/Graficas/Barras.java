@@ -7,6 +7,7 @@ package Graficas;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
@@ -24,6 +25,7 @@ public class Barras {
     public String[] ejex;
     public String[] valores;
     public int contBarras;
+    public static ArrayList<String> GraficasBarras = new ArrayList<>();
     public Barras(){
         
     }
@@ -47,6 +49,7 @@ public class Barras {
             final ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
             final File BarChart = new File( "BarChart"+String.valueOf(contBarras)+".png" ); 
             ChartUtilities.saveChartAsPNG(BarChart , barChart , width , height, info );
+            GraficasBarras.add(BarChart.getName());
             System.out.println("GRAFICA DE BARRAS GENERADA");
         }catch(Exception e){
             System.out.println(e);

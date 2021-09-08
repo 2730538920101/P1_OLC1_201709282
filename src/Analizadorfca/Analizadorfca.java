@@ -7,9 +7,11 @@ package Analizadorfca;
 
 import ASTfca.Erroresfca.ListaErroresfca;
 import ASTfca.Instrucciones.Instrucciones;
+import Control.Funciones;
 
 import Vista.Principal;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 /**
@@ -20,7 +22,7 @@ public class Analizadorfca {
     private static Analizadorfca analizador;
     public static ListaErroresfca errores;
     public static ArrayList<Instrucciones> instrucciones;
-    
+    public Funciones funciones = Principal.func;
 
     
     private Analizadorfca(){
@@ -74,11 +76,13 @@ public class Analizadorfca {
         });
     }
     
-    public void Ejecutarfca(){
+    public void Ejecutarfca() throws IOException{
         System.out.println("Cantidad de instrucciones reconocidas: " + instrucciones.size());
         instrucciones.forEach( (ins) -> {
             ins.Accion();
         });
+        funciones.GenerarReporte();
+        System.out.println("REPORTE GENERADO");
     }
 
 

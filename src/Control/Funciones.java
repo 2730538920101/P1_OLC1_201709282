@@ -9,14 +9,20 @@ import ASTjs.Clases.Clases;
 import ASTjs.Clases.Comentarios;
 import static ASTjs.Clases.Instruccion.DECLARACIONVARIABLE;
 import Analizadorjs.Analizadorjs;
+import Graficas.Barras;
+import Graficas.Pie;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -42,7 +48,19 @@ public class Funciones {
     public String[] nombreArchivos1;
     public String[] nombreArchivos2;
     public ArrayList<Archivo> proyecto1 = new ArrayList<>();
-    public ArrayList<Archivo> proyecto2 = new ArrayList<>();;
+    public ArrayList<Archivo> proyecto2 = new ArrayList<>();
+    ArrayList<String> GraficasLineas = new ArrayList<>();
+    ArrayList<String> GraficasBarras = Barras.GraficasBarras;
+    ArrayList<String> GraficasPie = Pie.GraficasPie;
+    int totalGclases1 = 0;
+    int totalGmetodos1 = 0;
+    int totalGvariables1 = 0;
+    int totalGcomentarios1 = 0;
+    int totalGclases2 = 0;
+    int totalGmetodos2 = 0;
+    int totalGvariables2 = 0;
+    int totalGcomentarios2 = 0;
+   
     Comparador comp;
     public Funciones(){
         seleccionar = new JFileChooser();
@@ -140,10 +158,11 @@ public class Funciones {
             File arch1 = new File(archivo);
             FileReader fr = new FileReader (arch1);
             BufferedReader br = new BufferedReader(fr);
-             while (br.ready()) {
+            while (br.ready()) {
                  mensaje = mensaje + br.readLine();
-             }
-            
+            }
+            br.close();
+            fr.close();
         }catch(Exception e){
             System.out.println(e);
         }
@@ -499,14 +518,7 @@ public class Funciones {
     public int lineascont = 0;
     public void hacerLineas(String[] titulo, String[] nombreArchivo) throws IOException{
         lineascont++;
-        int totalGclases1 = 0;
-        int totalGmetodos1 = 0;
-        int totalGvariables1 = 0;
-        int totalGcomentarios1 = 0;
-        int totalGclases2 = 0;
-        int totalGmetodos2 = 0;
-        int totalGvariables2 = 0;
-        int totalGcomentarios2 = 0;
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
         for (int i = 0; i < getProyecto1().size(); i++) {
             if(nombreArchivo[0].equalsIgnoreCase(getProyecto1().get(i).getNombre())){
@@ -546,7 +558,7 @@ public class Funciones {
             final ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
             final File lineChart = new File( "LineChart"+String.valueOf(lineascont)+".png" ); 
             ChartUtilities.saveChartAsPNG(lineChart ,lineChartObject, width ,height, info);
-       
+            GraficasLineas.add(lineChart.getName());
         }catch(Exception e){
             System.out.println(e);
         }
@@ -609,5 +621,113 @@ public class Funciones {
         this.proyecto2 = proyecto2;
     }
     
+    public String getHTMLimagenes(){
+        String resultado = "";
+        resultado = resultado + "<h1 class=\"titulos\">SECCION DE GRAFICAS</h1>\n";
+        resultado = resultado + "<div class=\"contenedor\">\n";
+        for (int i = 0; i < GraficasLineas.size(); i++) {
+            resultado = resultado + "<img src=\""+this.GraficasLineas.get(i)+"\"/>\n";
+        }
+        for (int i = 0; i < GraficasBarras.size(); i++) {
+            resultado = resultado + "<img src=\""+this.GraficasBarras.get(i)+"\"/>\n";
+        }
+        resultado = resultado + "</div>";
+        for (int i = 0; i < GraficasPie.size(); i++) {
+            resultado = resultado + "<img src=\""+this.GraficasPie.get(i)+"\"/>\n";
+        }
+        resultado = resultado + "</div>\n";
+        return resultado;
+    }
     
+    public String getHTMLhead(){
+        String resultado ="";
+        resultado = resultado + "<head>\n";
+        resultado = resultado + "<title>REPORTE ESTADISTICO</title>\n";
+        resultado = resultado + "<link rel=\"stylesheet\" href=\"main.css\" type=\"text/css\"/>\n";
+        resultado = resultado + "</head>\n";
+        return resultado;
+    }
+    
+    
+    public String getHTMLdatos(){
+        String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+
+        String resultado = "";
+        resultado = resultado + "<h1 class=\"titulos\">DATOS FINALES</h1>\n";
+        resultado = resultado + "<div class=\"contenedor\">\n";
+        resultado = resultado + "<div class=\"datos\">\n";
+        resultado = resultado + "<b>NOMBRE: </b>\n";
+        resultado = resultado + "</b>\n";
+        resultado = resultado + "<p>CARLOS JAVIER MARTINEZ POLANCO</p>\n";
+        resultado = resultado + "</div>\n";
+        resultado = resultado + "<div class=\"datos\">\n";
+        resultado = resultado + "<b>CARNET: </b>\n";
+        resultado = resultado + "</b>\n";
+        resultado = resultado + "<p>201709282</p>\n";
+        resultado = resultado + "</div>\n";
+        resultado = resultado + "<div class=\"datos\">\n";
+        resultado = resultado + "<b>FECHA Y HORA: </b>\n";
+        resultado = resultado + "</b>\n";
+        resultado = resultado + "<p>"+timeStamp+"</p>\n";
+        resultado = resultado + "</div>\n";
+        resultado = resultado + "</div>\n";
+        return resultado;
+    }
+    
+    public String getHTMLtable(){
+        String resultado = "";
+        resultado = resultado + "<h1 class=\"titulos\">RESUMEN</h1>\n";
+        resultado = resultado + "<div class=\"contenedor\">\n";
+        resultado = resultado + "<table class=\"tabla\">\n";
+        resultado = resultado + "<thead>\n";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<th>TIPO</th>\n";
+        resultado = resultado + "<th>PROYECTO A</th>\n";
+        resultado = resultado + "<th>PROYECTO B</th>\n";
+        resultado = resultado + "</tr>\n";
+        resultado = resultado + "</thead>\n";
+        resultado = resultado + "<tbody>\n";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<td>TOTAL CLASES</td>\n";
+        resultado = resultado + "<td>"+totalGclases1+"</td>\n";
+        resultado = resultado + "<td>"+totalGclases2+"</td>\n";
+        resultado = resultado + "</tr>\n";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<td>TOTAL VARIABLES</td>\n";
+        resultado = resultado + "<td>"+totalGvariables1+"</td>\n";
+        resultado = resultado + "<td>"+totalGvariables2+"</td>\n";
+        resultado = resultado + "</tr>\n";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<td>TOTAL METODOS</td>\n";
+        resultado = resultado + "<td>"+totalGmetodos1+"</td>\n";
+        resultado = resultado + "<td>"+totalGmetodos2+"</td>\n";
+        resultado = resultado + "</tr>\n";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<td>TOTAL COMENTARIOS</td>\n";
+        resultado = resultado + "<td>"+totalGcomentarios1+"</td>\n";
+        resultado = resultado + "<td>"+totalGcomentarios2+"</td>\n";
+        resultado = resultado + "</tr>\n";
+        resultado = resultado + "</tbody>\n";
+        resultado = resultado + "</table>\n";
+        resultado = resultado + "</div>\n";
+        return resultado;
+    }
+    
+    public int contadorReportes;
+    public void GenerarReporte() throws IOException{
+        contadorReportes++;
+        String resultado = "";
+        resultado = resultado + "<!DOCTYPE html>\n";
+        resultado = resultado + getHTMLhead();
+        resultado = resultado + "<body>\n";
+        resultado = resultado + getHTMLtable();
+        resultado = resultado + getHTMLimagenes();
+        resultado = resultado + getHTMLdatos();
+        resultado = resultado + "</body>\n";
+        
+        File reporte = new File("index"+String.valueOf(contadorReportes)+".html");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(reporte));
+        bw.write(resultado);
+        bw.close();
+    }
 }

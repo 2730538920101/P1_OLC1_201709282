@@ -7,6 +7,7 @@ package Graficas;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
@@ -23,6 +24,7 @@ public class Pie {
     public String[] ejex;
     public String[] valores;
     public int contPie;
+    public static ArrayList<String> GraficasPie = new ArrayList<>();
     
     public Pie(){
         
@@ -90,6 +92,7 @@ public class Pie {
             final ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
             final File pieChart = new File( "PieChart"+String.valueOf(contPie)+".png" ); 
             ChartUtilities.saveChartAsPNG( pieChart , chart , width , height, info );
+            GraficasPie.add(pieChart.getName());
             System.out.println("GRAFICA DE PIE GENERADA");
         }catch(Exception e){
             System.out.println(e);
