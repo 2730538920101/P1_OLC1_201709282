@@ -77,12 +77,21 @@ public class Analizadorfca {
     }
     
     public void Ejecutarfca() throws IOException{
-        System.out.println("Cantidad de instrucciones reconocidas: " + instrucciones.size());
-        instrucciones.forEach( (ins) -> {
-            ins.Accion();
-        });
-        funciones.GenerarReporte();
-        System.out.println("REPORTE GENERADO");
+        try{
+            System.out.println("Cantidad de instrucciones reconocidas: " + instrucciones.size());
+            instrucciones.forEach( (ins) -> {
+                ins.Accion();
+            });
+            funciones.GenerarReporte();
+            System.out.println("REPORTE GENERADO");
+            funciones.GenerarJson();
+            System.out.println("REPORTE JSON GENERADO");
+            funciones.GenerarReporteErrores();
+            System.out.println("REPORTE DE ERRORES GENERADO");
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        
     }
 
 

@@ -86,7 +86,8 @@ public class PuntajeEspecifico {
     }
     
     public String getEspecificoMsj(){
-        if(getTipo().equalsIgnoreCase("comentario")){
+        String comp = getTipo().replace("\"", "");
+        if(comp.equalsIgnoreCase("comentario")){
             return this.valor + "en el archivo: " + getNombreArchivo() + " Valor que desea buscar: " + getTipo() + "\n";
         }else{
             return this.valor + "en el archivo: " + getNombreArchivo() + " Valor que desea buscar: " + getTipo() + " en la clase: " + getNombreClase() + "\n";

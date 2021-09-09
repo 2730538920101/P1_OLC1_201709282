@@ -10,11 +10,12 @@ package ASTfca.Erroresfca;
  * @author Carlos Martinez
  */
 public class MiErrorfca {
-    public MiErrorfca(int linea, int columna, TipoErrorfca tipo, String mensaje) {
+    public MiErrorfca(int linea, int columna, TipoErrorfca tipo, String mensaje, String valor) {
         this.linea = linea+1;
         this.columna = columna+1;
         this.tipo = tipo;
         this.mensaje = mensaje;
+        this.valor = valor;
     }
 
     @Override
@@ -85,4 +86,19 @@ public class MiErrorfca {
     private int columna; 
     private TipoErrorfca tipo; 
     private String mensaje; 
+    public String valor;
+
+    /**
+     * @return the valor
+     */
+    public String getValor() {
+        return valor;
+    }
+
+    /**
+     * @param valor the valor to set
+     */
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
 }

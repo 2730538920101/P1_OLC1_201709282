@@ -5,6 +5,13 @@
  */
 package Control;
 
+import ASTfca.Instrucciones.Instrucciones;
+import ASTfca.Instrucciones.Puntaje;
+import ASTfca.Instrucciones.PuntajeEspecifico;
+import ASTfca.Instrucciones.PuntajeGeneral;
+import ASTfca.Instrucciones.TipoPuntaje;
+import static ASTfca.Instrucciones.TipoPuntaje.ESPECIFICO;
+import static ASTfca.Instrucciones.TipoPuntaje.GENERAL;
 import ASTjs.Clases.Clases;
 import ASTjs.Clases.Comentarios;
 import static ASTjs.Clases.Instruccion.DECLARACIONVARIABLE;
@@ -52,6 +59,8 @@ public class Funciones {
     ArrayList<String> GraficasLineas = new ArrayList<>();
     ArrayList<String> GraficasBarras = Barras.GraficasBarras;
     ArrayList<String> GraficasPie = Pie.GraficasPie;
+ 
+    public ArrayList<Puntaje> puntajes = Instrucciones.puntajes;
     int totalGclases1 = 0;
     int totalGmetodos1 = 0;
     int totalGvariables1 = 0;
@@ -285,6 +294,7 @@ public class Funciones {
                 }
 
                 Archivo respuesta2 = new Archivo(nombreArchivo,totalClases,totalVariables,totalMetodos,totalComentarios, clases2);
+              
                 this.proyecto2.add(respuesta2);
             }
             
@@ -647,6 +657,14 @@ public class Funciones {
         resultado = resultado + "</head>\n";
         return resultado;
     }
+    public String getHTMLherrores(){
+        String resultado ="";
+        resultado = resultado + "<head>\n";
+        resultado = resultado + "<title>REPORTE ERRORES</title>\n";
+        resultado = resultado + "<link rel=\"stylesheet\" href=\"main.css\" type=\"text/css\"/>\n";
+        resultado = resultado + "</head>\n";
+        return resultado;
+    }
     
     
     public String getHTMLdatos(){
@@ -730,4 +748,155 @@ public class Funciones {
         bw.write(resultado);
         bw.close();
     }
+    public static int contadorRepErrores;
+    public void GenerarReporteErrores() throws IOException{
+        contadorRepErrores++;
+        String resultado = "";
+        resultado = resultado + "<!DOCTYPE html>\n";
+        resultado = resultado + getHTMLherrores();
+        resultado = resultado + "<body>\n";
+        resultado = resultado + getHTMLerrores();
+        resultado = resultado + "</body>\n";
+        
+        File reporte = new File("errores"+String.valueOf(contadorRepErrores)+".html");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(reporte));
+        bw.write(resultado);
+        bw.close();
+    }
+    
+    
+    
+    public void GenerarJson() throws IOException{
+        contadorJson++;
+        String resultado = "{\n";
+        ArrayList<Puntaje> puntajes2 = new ArrayList<>();
+        for (int i = 0; i < puntajes.size(); i++) {
+            if(puntajes.get(i).getTipo()==GENERAL){
+                resultado = resultado + "\"PuntajeGeneral\":"+puntajes.get(i).getPuntajes()+",\n";
+            }else{
+                puntajes2.add(puntajes.get(i));
+            }
+        }
+        resultado = resultado + "\"PuntajesEspecificos\":[\n";
+        for (int i = 0; i < puntajes2.size(); i++) {
+            if(puntajes2.get(i).getTipo()==ESPECIFICO){
+                
+                switch(puntajes2.get(i).getPespecifico().getTipo().replace("\"", "")){
+                    case "clases":
+                        resultado = resultado + "{\n";
+                        resultado = resultado + "\"archivo\":"+puntajes2.get(i).getPespecifico().getNombreArchivo()+",\n";
+                        resultado = resultado + "\"tipo\":"+puntajes2.get(i).getPespecifico().getTipo()+",\n";   
+                        resultado = resultado + "\"nombre\":" + puntajes2.get(i).getPespecifico().getNombreClase()+",\n";
+                        resultado = resultado + "\"puntaje\":"+puntajes2.get(i).getPuntajes()+"\n";
+                        if(i == puntajes2.size()-1){
+                            resultado = resultado + "}\n";
+                        }else{
+                            resultado = resultado + "},\n";
+                        }                      
+                        break;
+                    case "variable":
+                        resultado = resultado + "{\n";
+                        resultado = resultado + "\"archivo\":"+puntajes2.get(i).getPespecifico().getNombreArchivo()+",\n";
+                        resultado = resultado + "\"tipo\":"+puntajes2.get(i).getPespecifico().getTipo()+",\n";
+                        resultado = resultado + "\"nombre\":" + puntajes2.get(i).getPespecifico().getNombreClase()+",\n";
+                        resultado = resultado + "\"puntaje\":"+puntajes2.get(i).getPuntajes()+"\n";
+                        if(i == puntajes2.size()-1){
+                            resultado = resultado + "}\n";
+                        }else{
+                            resultado = resultado + "},\n";
+                        }                      
+                        break;
+                    case "metodo":
+                        resultado = resultado + "{\n";
+                        resultado = resultado + "\"archivo\":"+puntajes2.get(i).getPespecifico().getNombreArchivo()+",\n";
+                        resultado = resultado + "\"tipo\":"+puntajes2.get(i).getPespecifico().getTipo()+",\n";
+                        resultado = resultado + "\"nombre\":" + puntajes2.get(i).getPespecifico().getNombreClase()+",\n";
+                        resultado = resultado + "\"puntaje\":"+puntajes2.get(i).getPuntajes()+"\n";
+                        if(i == puntajes2.size()-1){
+                            resultado = resultado + "}\n";
+                        }else{
+                            resultado = resultado + "},\n";
+                        }                      
+                        break;
+                    case "comentario":
+                        resultado = resultado + "{\n";
+                        resultado = resultado + "\"archivo\":"+puntajes2.get(i).getPespecifico().getNombreArchivo()+",\n";
+                        resultado = resultado + "\"tipo\":"+puntajes2.get(i).getPespecifico().getTipo()+",\n";
+                        resultado = resultado + "\"puntaje\":"+puntajes2.get(i).getPuntajes()+"\n";
+                        if(i == puntajes2.size()-1){
+                            resultado = resultado + "}\n";
+                        }else{
+                            resultado = resultado + "},\n";
+                        }                      
+                        break;
+                }
+                
+                
+                
+            }
+        }
+        resultado = resultado + "]\n";
+        resultado = resultado + "}\n";
+        
+        
+        File reporte = new File("puntajes"+String.valueOf(contadorJson)+".json");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(reporte));
+        bw.write(resultado);
+        bw.close();
+        
+    }
+    
+    public int contadorJson;
+    
+    
+     public String getHTMLerrores(){
+        String resultado = "";
+        resultado = resultado + "<h1 class=\"titulos\">REPORTE DE ERRORES</h1>\n";
+        resultado = resultado + "<div class=\"contenedor\">\n";
+        resultado = resultado + "<table class=\"tabla\">\n";
+        resultado = resultado + "<thead>\n";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<th>LEXEMA</th>\n";
+        resultado = resultado + "<th>TIPO</th>\n";
+        resultado = resultado + "<th>LINEA</th>\n";
+        resultado = resultado + "<th>COLUMNA</th>\n";
+        resultado = resultado + "<th>ARCHIVO</th>\n";
+        resultado = resultado + "</tr>\n";
+        resultado = resultado + "</thead>\n";
+        resultado = resultado + "<tbody>\n";
+        //HACER UN FOR AQUI PRIMERO LEER LOS TOKENS DE FCA Y LUEGO DE LOS DIRECTORIOS CON ARCHIVOS JS
+        if(Analizadorfca.Analizadorfca.errores.size()>0){
+            for(int i=0; i < Analizadorfca.Analizadorfca.errores.size();i++){
+                String lexema = Analizadorfca.Analizadorfca.errores.get(i).getValor();
+                String tipo = String.valueOf(Analizadorfca.Analizadorfca.errores.get(i).getTipo());
+                String linea = String.valueOf(Analizadorfca.Analizadorfca.errores.get(i).getLinea());
+                String columna = String.valueOf(Analizadorfca.Analizadorfca.errores.get(i).getColumna());
+                String archivo = "Entrada";
+                //System.out.println("lex: "+ lexema + " tipo: "+ tipo + " linea: "+linea+" columna: "+columna + " archivo: " +archivo);
+                resultado = resultado + "<tr>\n";
+                resultado = resultado + "<td>"+lexema+"</td>\n";
+                resultado = resultado + "<td>"+tipo+"</td>\n";
+                resultado = resultado + "<td>"+linea+"</td>\n";
+                resultado = resultado + "<td>"+columna+"</td>\n";
+                resultado = resultado + "<td>"+archivo+"</td>\n";
+                resultado = resultado + "</tr>\n";
+            } 
+        }
+        
+        
+        /*
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<td>"+""+"</td>\n";
+        resultado = resultado + "<td>"+""+"</td>\n";
+        resultado = resultado + "<td>"+""+"</td>\n";
+        resultado = resultado + "<td>"+""+"</td>\n";
+        resultado = resultado + "<td>"+""+"</td>\n";
+        resultado = resultado + "</tr>\n";*/
+        
+        resultado = resultado + "</tbody>\n";
+        resultado = resultado + "</table>\n";
+        resultado = resultado + "</div>\n";
+        return resultado;
+    }
+    
 }

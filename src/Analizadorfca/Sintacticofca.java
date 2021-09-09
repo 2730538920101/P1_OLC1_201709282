@@ -252,7 +252,7 @@ public class Sintacticofca extends java_cup.runtime.lr_parser {
         System.out.println("Error Sintáctico en la Línea " + (s.left) +
         " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
         Analizadorfca.errores.add(new MiErrorfca(s.left, s.right, TipoErrorfca.SINTACTICO, 
-                "Se detectó un error sintáctico ("+s.value+")"));
+                "Se detectó un error sintáctico ("+s.value+")",String.valueOf(s.value)));
         
     } 
 
@@ -265,7 +265,7 @@ public class Sintacticofca extends java_cup.runtime.lr_parser {
         (s.left)+ " Columna "+s.right+". Componente " + s.value + 
         " no reconocido."); 
         Analizadorfca.errores.add(new MiErrorfca(s.left, s.right, TipoErrorfca.SINTACTICO, 
-                        "Se detectó un error sintáctico ("+s.value+")"));
+                        "Se detectó un error sintáctico ("+s.value+")",String.valueOf(s.value)));
     }  
 
 

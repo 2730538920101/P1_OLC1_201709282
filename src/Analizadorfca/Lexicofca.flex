@@ -72,5 +72,5 @@ COMENTARIO_MULTI =  \#\*([^\*\#]|[^\*]\#|\*[^\#])*\*\#
     System.out.println("Este es un error lexico: "+yytext()+
     ", en la linea: "+yyline+", en la columna: "+yycolumn);
     Analizadorfca.errores.add(new MiErrorfca(yyline, yycolumn, TipoErrorfca.LEXICO, 
-    "Se detectó un error léxico (caracter "+yytext()+")"));
+    "Se detectó un error léxico (caracter "+yytext()+")", yytext()));
 }

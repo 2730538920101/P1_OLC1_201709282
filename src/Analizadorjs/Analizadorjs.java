@@ -72,6 +72,6 @@ public class Analizadorjs {
     public static void setClases(ArrayList<Clases> aClases) {
         clases = aClases;
     }
-       
+
     
 }

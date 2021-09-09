@@ -34,5 +34,7 @@ public class ListaErroresjs extends ArrayList<MiErrorjs> {
         });
     }
     
+
+    
 }
 

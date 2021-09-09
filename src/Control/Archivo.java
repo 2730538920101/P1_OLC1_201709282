@@ -6,6 +6,7 @@
 package Control;
 
 import ASTjs.Clases.Clases;
+import ASTjs.Erroresjs.ListaErroresjs;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,6 @@ public class Archivo {
     public String nombre;
     public int totalClases, totalVariables, totalMetodos, totalComentarios;
     public ArrayList<Clases> resultado;
-
     public Archivo(String nombre, int totalClases, int totalVariables, int totalMetodos, int totalComentarios, ArrayList<Clases> resultado){
         this.nombre = nombre;
         this.totalClases = totalClases;
@@ -108,6 +108,7 @@ public class Archivo {
     public void setResultado(ArrayList<Clases> resultado) {
         this.resultado = resultado;
     }
+
     
     
     

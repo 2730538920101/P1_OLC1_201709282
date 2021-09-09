@@ -632,8 +632,8 @@ public class Sintacticojs extends java_cup.runtime.lr_parser {
     public void syntax_error(Symbol s){ 
         System.out.println("Error Sintáctico en la Línea " + (s.left) +
         " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
-        Analizadorjs.errores.add(new MiErrorjs(s.left, s.right, TipoErrorjs.SINTACTICO, 
-                "Se detectó un error sintáctico ("+s.value+")"));
+        Analizadorjs.errores.addError(new MiErrorjs(s.left, s.right, TipoErrorjs.SINTACTICO, 
+                "Se detectó un error sintáctico ("+s.value+")", String.valueOf(s.value)));
         
     } 
 
@@ -645,8 +645,8 @@ public class Sintacticojs extends java_cup.runtime.lr_parser {
         System.out.println("Error síntactico irrecuperable en la Línea " + 
         (s.left)+ " Columna "+s.right+". Componente " + s.value + 
         " no reconocido."); 
-        Analizadorjs.errores.add(new MiErrorjs(s.left, s.right, TipoErrorjs.SINTACTICO, 
-                        "Se detectó un error sintáctico ("+s.value+")"));
+        Analizadorjs.errores.addError(new MiErrorjs(s.left, s.right, TipoErrorjs.SINTACTICO, 
+                        "Se detectó un error sintáctico ("+s.value+")", String.valueOf(s.value)));
     }
     
     public Clase clase;

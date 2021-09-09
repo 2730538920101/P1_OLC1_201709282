@@ -741,8 +741,8 @@ public class Lexicojs implements java_cup.runtime.Scanner {
           case 1: 
             { System.out.println("Este es un error lexico: "+yytext()+
     ", en la linea: "+yyline+", en la columna: "+yycolumn);
-    Analizadorjs.errores.add(new MiErrorjs(yyline, yycolumn, TipoErrorjs.LEXICO, 
-    "Se detectó un error léxico (caracter "+yytext()+")"));
+    Analizadorjs.errores.addError(new MiErrorjs(yyline, yycolumn, TipoErrorjs.LEXICO, 
+    "Se detectó un error léxico (caracter "+yytext()+")", yytext()));
             } 
             // fall through
           case 50: break;

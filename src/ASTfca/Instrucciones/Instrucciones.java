@@ -5,6 +5,8 @@
  */
 package ASTfca.Instrucciones;
 
+import static ASTfca.Instrucciones.TipoDato.PUNTAJE_ESPECIFICO;
+import static ASTfca.Instrucciones.TipoDato.PUNTAJE_GENERAL;
 import Control.Archivo;
 import Control.Funciones;
 import Graficas.Barras;
@@ -28,6 +30,9 @@ public class Instrucciones{
     ArrayList<InstruccionesBarras> instb;
     ArrayList<InstruccionesPie> instp;
     ArrayList<InstruccionesLineas> instl;
+    public static ArrayList<Puntaje> puntajes = new ArrayList<>();
+   
+    
     public Instrucciones(String token, Instruccion tipo){
         this.token = token;
         this.tipo = tipo;        
@@ -220,6 +225,7 @@ public class Instrucciones{
                         switch(varlist.get(i).getTipo()){
                                
                             case PUNTAJE:
+                                puntajes.add(varlist.get(i).getValorp());
                                 var = varlist.get(i).getValorp().getId();
                                 valor = varlist.get(i).getValorp().getPuntajes();
                                 varlist.get(i).setValor(valor);
@@ -256,6 +262,14 @@ public class Instrucciones{
                                 String res3 = "";
                                 for (int j = 0; j < instb.get(i).getParametro().size(); j++) {
                                     res3 = res3 + instb.get(i).getParametro().get(j).getValorParam() + ";";
+                                    if(instb.get(i).getParametro().get(j).getTipo()== PUNTAJE_GENERAL){
+                                        Puntaje pun = new Puntaje(TipoPuntaje.GENERAL,"PARAMETRO",instb.get(i).getParametro().get(j).getPgeneral());
+                                        puntajes.add(pun);
+                                    }
+                                    if(instb.get(i).getParametro().get(j).getTipo()== PUNTAJE_ESPECIFICO){
+                                        Puntaje pun = new Puntaje(TipoPuntaje.ESPECIFICO,"PARAMETRO",instb.get(i).getParametro().get(j).getPespecifico());
+                                        puntajes.add(pun);
+                                    }
                                 }
                                 String[] respuesta3 = res3.split(";");
                                 bar.setValores(respuesta3);
@@ -308,6 +322,14 @@ public class Instrucciones{
                                 String res3 = "";
                                 for (int j = 0; j < instp.get(i).getParametro().size(); j++) {
                                     res3 = res3 + instp.get(i).getParametro().get(j).getValorParam() + ";";
+                                    if(instp.get(i).getParametro().get(j).getTipo()== PUNTAJE_GENERAL){
+                                        Puntaje pun = new Puntaje(TipoPuntaje.GENERAL,"PARAMETRO",instp.get(i).getParametro().get(j).getPgeneral());
+                                        puntajes.add(pun);
+                                    }
+                                    if(instp.get(i).getParametro().get(j).getTipo()== PUNTAJE_ESPECIFICO){
+                                        Puntaje pun = new Puntaje(TipoPuntaje.ESPECIFICO,"PARAMETRO",instp.get(i).getParametro().get(j).getPespecifico());
+                                        puntajes.add(pun);
+                                    }
                                 }
                                 String[] respuesta3 = res3.split(";");
                                 pie.setValores(respuesta3);

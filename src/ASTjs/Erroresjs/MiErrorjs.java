@@ -12,11 +12,12 @@ package ASTjs.Erroresjs;
  * @author Carlos Martinez
  */
 public class MiErrorjs {
-    public MiErrorjs(int linea, int columna, TipoErrorjs tipo, String mensaje) {
+    public MiErrorjs(int linea, int columna, TipoErrorjs tipo, String mensaje, String valor) {
         this.linea = linea+1;
         this.columna = columna+1;
         this.tipo = tipo;
         this.mensaje = mensaje;
+        this.valor = valor;
     }
 
     @Override
@@ -24,7 +25,17 @@ public class MiErrorjs {
         return "Error "+this.tipo.toString().toLowerCase()+": "+this.mensaje+" en línea "+this.linea+" y columna "+this.columna;
     }
     
-    
+    public String generarEtiqueta(String nombreArchivo){
+        String resultado = "";
+        resultado = resultado + "<tr>\n";
+        resultado = resultado + "<td>"+valor+"</td>\n";
+        resultado = resultado + "<td>"+String.valueOf(tipo)+"</td>\n";
+        resultado = resultado + "<td>"+String.valueOf(linea)+"</td>\n";
+        resultado = resultado + "<td>"+String.valueOf(columna)+"</td>\n";
+        resultado = resultado + "<td>"+nombreArchivo+"</td>\n";
+        resultado = resultado + "</tr>\n";
+        return resultado;
+    }
 
     
     /**
@@ -87,4 +98,19 @@ public class MiErrorjs {
     private int columna; 
     private TipoErrorjs tipo; 
     private String mensaje; 
+    public String valor;
+
+    /**
+     * @return the valor
+     */
+    public String getValor() {
+        return valor;
+    }
+
+    /**
+     * @param valor the valor to set
+     */
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
 }

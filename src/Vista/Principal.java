@@ -10,6 +10,11 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import Analizadorfca.*;
 import Analizadorjs.*;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -86,6 +91,11 @@ public class Principal extends javax.swing.JFrame {
         });
 
         btnReportes.setText("Reportes");
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -302,6 +312,19 @@ public class Principal extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnEjecutarActionPerformed
+
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        // TODO add your handling code here:
+        int contReportes = Funciones.contadorRepErrores;
+        File rep = new File("index"+String.valueOf(contReportes)+".html");
+        if(rep.exists()){
+            try {
+                Desktop.getDesktop().browse(rep.toURI());
+            } catch (IOException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnReportesActionPerformed
 
     public static void EscribirMsj(String mensaje){
         consoleMsj = consoleMsj + mensaje;
